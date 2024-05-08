@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script defer src="ElCh.js"></script>
+    <link rel="stylesheet" href="ElCh.css" />
+</head>
+<body>
+    <div id = "container">
+        <ul id="category">
+            <li id="click1" data-order="0"> 
+                <span class="category_bg cafe"></span>
+                다시<br>검색
+            </li>       
+            <li id="click2" data-order="1"> 
+                <span class="category_bg mart"></span>
+                거리<br>우선
+            </li>  
+            <li id="click3" data-order="2"> 
+                <span class="category_bg pharmacy"></span>
+                빈칸<br>우선        
+            </li>  
+            <li id="click4" data-order="3"> 
+                <span class="category_bg bank"></span>
+                가격<br>우선
+            </li>  
+            <li id="click5" data-order="4"> 
+                <span class="category_bg oil"></span>
+                고속<br>우선
+            </li>      
+        </ul>
+        <div id = "update_time">상태 갱신 까지<br><span>10</span>/초</div>
+        <div id = "map"></div>
+        <div id = "info">
+            <div id = "charger_info">
+                <div id = "charger_name">
+                    <div id = "name">
+                        <div><a> 충전소 이름 OOOOO</a></div>
+                        <div><a>충전소 부수정보 OOOOO</a></div>
+                    </div>
+                    <div id = "close">
+                        <div id = "close_inner">닫기</div>
+                    </div>
+                </div>
+                <div id = "charger_name_2">
+                    <div id = "slow">
+                        <div><img src="../../web/img/slow.png" width="20%"><a>일반 충전기</a></div>
+                        <a>4/6 사용중 </a>
+                    </div>
+                    <div id = "fast">
+                        <div><img src="../../web/img/fast.png" width="20%"><a>고속 충전기</a></div>
+                        <a>2/6 사용중 </a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div id = "review">
+                <div id = "review_name">
+                    <div>
+                        <a>리뷰</a>
+                    </div>
+                </div>
+                <div id = "review_content">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus, voluptas aut nobis consequatur deleniti odio repellendus voluptatibus optio odit debitis, doloribus fugiat nisi cum quibusdam! Cum aut fugit praesentium sint.
+                </div>
+            </div>
+        </div>
+     </div>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=523de47db2bf718f892734be41ae3ee7"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+*{  padding:0 ;margin: 0;box-sizing: border-box;
+    /* border: 0.01vw solid black; */
+}
+a {text-decoration: none;}
+
+
+/* 상단바 */
+#category {position:absolute;top:10px;left:0.5vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
+#category li {float:left;list-style: none;width:10vw; height:15vh; border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer; font-size: 1.6vw;}
+#category li.on {background: #eee;}
+#category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
+#category li:last-child{margin-right:0;border-right:0;}
+#category li span {display: block;margin:0 auto 3px;width:27px;height: 28px;}
+#category li .category_bg {background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png) no-repeat;}
+#category li .bank {background-position: -10px 0;}
+#category li .mart {background-position: -10px -36px;}
+#category li .pharmacy {background-position: -10px -72px;}
+#category li .oil {background-position: -10px -108px;}
+#category li .cafe {background-position: -10px -144px;}
+#category li .store {background-position: -10px -180px;}
+#category li.on .category_bg {background-position-x:-46px;}
+
+/* 업데이트 타임 보드 */
+#update_time { float:left; width:8vw; height:6vh; position:absolute; top:10px; left:51vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; font-size: 1vw;}
+
+/* info , map */
+#container {display: flex;}
+
+/* map */
+#map {width: 100vw; height: 100vh;}
+
+/* info */
+#info { width: 0vw; height: 100vh; overflow: hidden; align-content: space-around;
+    background-color: white; box-shadow: 0.5vw 0vw 1vw -0.1vw inset gray;}
+#charger_info {width: 90%; height: 55%; margin: auto;
+    /* box-shadow: 1vw 1vw 1vw 0.1vw    gray; */
+}
+#review { width: 90%; height: 35%; margin: auto;
+    /* box-shadow: 0.5vw 0vw 1vw -0.1vw inset gray; */
+}
+
+#charger_name { display: flex; width: 100%; height: 30%; border-radius: 2%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
+#name { position:relative; left:3%; width: 100%; font-size: 2.5vw; align-content: center;}
+#name :nth-child(2) { position:relative; left:3%; font-size: 1.2vw; }
+#close { width: auto; align-content: center; position: relative; left:-5%;}
+#close_inner { width: 7.65vh; height: 7.65vh; font-size: 2.7vh; text-wrap: nowrap; text-align:center;align-content: center; border-radius: 20%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
+#close:hover {cursor: pointer;}
+#charger_name_2 { height: 70%; border-radius: 2%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
+
+#slow {
+    width: 70%;
+    height: 40%;
+    position: relative;
+    top: 5%;
+    left: 10%;
+    font-size: 1.7vw;
+    align-content: center;
+}
+#slow div {position: relative; left: -10%;}
+#slow div a {position:absolute; top:20%;}
+#fast {
+    width: 70%;
+    height: 40%;
+    position: relative;
+    top: 5%;
+    left: 10%;
+    font-size: 1.7vw;
+    align-content: center;
+}
+#fast div {position: relative; left: -10%;}
+#fast div a {position:absolute; top:20%;}
+
+#review_name { height: 35%; font-size: 2vw;}
+#review_name div {  height: 100%; align-content: center; }
+#review_content { height: 65%; font-size: 1.2vw; }
+
+
+
+
+
+
+
+
+
+/* map API */
+.wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+.wrap * {padding: 0;margin: 0;}
+.wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+.wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+.info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+.info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+.info .close:hover {cursor: pointer;}
+.info .body {position: relative;overflow: hidden;}
+.info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+.desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+.info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+.info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');}
+.info .link {color: #5085BB;}

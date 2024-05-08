@@ -31,7 +31,10 @@ public class test {
 
     public void test3()
     {
-
+        List<ChargingStationInfoDTO> data = databaseService.fetchNearbyData(35.254646, 128.639178);
+        for (ChargingStationInfoDTO row : data) {
+            System.out.println(row.getStationName() + " / " +row.getStationAddress());
+        }
     }
 
 }

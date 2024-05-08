@@ -9,8 +9,7 @@ public class ChargingStationApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ChargingStationApplication.class, args);
         test testInstance = context.getBean(test.class);
-        testInstance.test2();
-        SpringApplication.run(ChargingStationApplication.class, args);
+        testInstance.test3();
     }
 
 }

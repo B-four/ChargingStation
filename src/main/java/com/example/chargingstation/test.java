@@ -15,17 +15,23 @@ public class test {
 
     }
 
-
-
     @Autowired
     public test(DatabaseService databaseService) {
         this.databaseService = databaseService;
     }
 
-    public void test1() {
-        List<Map<String, Object>> data = databaseService.fetchAllData();
-        for (Map<String, Object> row : data) {
-            System.out.println(row);
+
+    public void test2() {
+        List<ChargingStationInfoDTO> data = databaseService.fetchAllData();
+        for (ChargingStationInfoDTO row : data) {
+            System.out.println(row.getStationName());
         }
+
     }
+
+    public void test3()
+    {
+
+    }
+
 }

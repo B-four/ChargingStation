@@ -16,8 +16,21 @@ public class DatabaseService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Map<String, Object>> fetchAllData() {
-        String sql = "SELECT * FROM charging_station_info";
-        return jdbcTemplate.queryForList(sql);
+   public List<ChargingStationInfoDTO> fetchAllData() {
+        return jdbcTemplate.query("SELECT * FROM charging_station_info", (rs, rowNum) -> {
+            ChargingStationInfoDTO chargingStationInfoDTO = new ChargingStationInfoDTO();
+            chargingStationInfoDTO.setStationAddress(rs.getString("address"));
+            chargingStationInfoDTO.setChargerType(rs.getInt("charger_type"));
+            chargingStationInfoDTO.setChargerID(rs.getInt("charger_id"));
+            chargingStationInfoDTO.setChargerName(rs.getString("charger_name"));
+            chargingStationInfoDTO.setChargerStatus(rs.getInt("charger_status"));
+            chargingStationInfoDTO.setChargerTerminal(rs.getInt("charger_terminal"));
+            chargingStationInfoDTO.setStationID(rs.getInt("station_id"));
+            chargingStationInfoDTO.setStationName(rs.getString("station_name"));
+            chargingStationInfoDTO.setStationLatitude(rs.getDouble("lat"));
+            chargingStationInfoDTO.setStationLongitude(rs.getDouble("longi"));
+            chargingStationInfoDTO.setStatus_UpdateTime(rs.getTimestamp("status_updatetime").toLocalDateTime());
+            return chargingStationInfoDTO;
+        });
     }
 }

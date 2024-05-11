@@ -87,6 +87,7 @@ function pointMarker(locPosition, message) {
 
 }
 var positions = [];
+var stations = [];
 
 window.onload = function () {
     fetchPositions();
@@ -98,7 +99,7 @@ function fetchPositions() {
     fetch('/positionList')
         .then(response => response.json())
         .then(data => {
-            var positions = data.map(item => ({
+            positions = data.map(item => ({
                 title: item.name,
                 latlng: new kakao.maps.LatLng(item.latitude, item.longitude)
             }));
@@ -115,7 +116,7 @@ function fetchStations() {
     fetch('/stationList')
         .then(response => response.json())
         .then(data => {
-            var stations = data.map(item => ({
+                stations = data.map(item => ({
                 stationAddress: item.stationAddress,
                 chargerType: item.chargerType,
                 chargerID: item.chargerID,
@@ -129,11 +130,11 @@ function fetchStations() {
                 status_UpdateTime: item.status_UpdateTime
             }));
             // stations 배열을 사용하는 로직
-            console.log(stations);
+            //console.log(stations);
         })
         .catch(error => console.error('Error:', error));
 }
-
+console.log(stations);
 ///////////////////////////////////////////////////// 마커를 표시할 위치와 title 객체 배열입니다 
 /*var positions = [
     {

@@ -7,11 +7,42 @@ document.getElementById("click1").addEventListener("click", function(){
 },false)
 
 // 충전소 정보 업데이트
-function UpdateInfo(){
-
+function UpdateInfo(stationID){
+    let foundIndexes = [];
+    stations.forEach(function(item, index) {
+        if (item.stationID == stationID) {
+            foundIndexes.push(item);
+        }
+    });
+    return foundIndexes;
 }
 // 충전소 정보 인터페이스 스윕
-function InfoShowOn(){
+function InfoShowOn(stationID){
+    let data = UpdateInfo(stationID);
+    document.getElementById("name_text1").innerHTML = data[0].stationName;
+    document.getElementById("name_text2").innerHTML = data[0].stationAddress;
+    var slow_using_num = 0;
+    var slow_all_num= 0;
+    var fast_using_num=0;
+    var fast_all_num=0;
+        data.forEach(function(item, index) {
+        if (item.chargerType == 1) {
+            slow_all_num++;
+            if (item.chargerStatus != 1){
+                slow_using_num++;
+            }
+        }
+        if (item.chargerType == 2) {
+            fast_all_num++;
+            if (item.chargerStatus != 1){
+                fast_using_num++;
+            }
+        }
+    });
+    document.getElementById("slow_using").innerHTML = slow_using_num;
+    document.getElementById("slow_all").innerHTML = slow_all_num;
+    document.getElementById("fast_using").innerHTML = fast_using_num;
+    document.getElementById("fast_all").innerHTML = fast_all_num;
     document.getElementById("info").style.width = "38vw";
     // document.getElementById("info").style.border = "0.5vw solid blueviolet";
     document.getElementById("map").style.width = "62vw";
@@ -25,8 +56,6 @@ function InfoShowOff(){
 document.getElementById("close").addEventListener("click", function(){
     InfoShowOff();
 },false)
-
-
 
 //==================================================
 // map Func
@@ -86,36 +115,18 @@ function pointMarker(locPosition, message) {
     infowindow.open(map, marker);
 
 }
-var positions = [];
+
+var stations = [];
 
 window.onload = function () {
-    fetchPositions();
     fetchStations();
-}
-
-//지도에 마킹하는 함수
-function fetchPositions() {
-    fetch('/positionList')
-        .then(response => response.json())
-        .then(data => {
-            var positions = data.map(item => ({
-                title: item.name,
-                latlng: new kakao.maps.LatLng(item.latitude, item.longitude)
-            }));
-            // positions 배열을 사용하는 로직
-            for(let i=0; i < positions.length; i++){
-                var data = positions[i];
-                displayMarker(data);
-            }
-        })
-        .catch(error => console.error('Error:', error));
 }
 
 function fetchStations() {
     fetch('/stationList')
         .then(response => response.json())
         .then(data => {
-            var stations = data.map(item => ({
+            stations = data.map(item => ({
                 stationAddress: item.stationAddress,
                 chargerType: item.chargerType,
                 chargerID: item.chargerID,
@@ -124,84 +135,21 @@ function fetchStations() {
                 chargerTerminal: item.chargerTerminal,
                 stationID: item.stationID,
                 stationName: item.stationName,
-                stationLatitude: item.stationLatitude,
-                stationLongitude: item.stationLongitude,
+                latlng: new kakao.maps.LatLng(item.stationLatitude, item.stationLongitude),
                 status_UpdateTime: item.status_UpdateTime
             }));
             // stations 배열을 사용하는 로직
-            console.log(stations);
+            //console.log(stations);
+            
+            // stations 배열을 사용하는 로직
+            for(let i=0; i < stations.length; i++){
+                var data = stations[i];
+                displayMarker(data);
+            }
+
         })
         .catch(error => console.error('Error:', error));
 }
-
-///////////////////////////////////////////////////// 마커를 표시할 위치와 title 객체 배열입니다 
-/*var positions = [
-    {
-        title: '디관 충전소', 
-        latlng: new kakao.maps.LatLng(36.145346, 128.392459)
-    },
-    {
-        title: '도서관 충전소', 
-        latlng: new kakao.maps.LatLng(36.145980, 128.394388)
-    },
-    {
-        title: '주차장 충전소', 
-        latlng: new kakao.maps.LatLng(36.142434, 128.394081)
-    },
-    {
-        title: '본관 충전소',
-        latlng: new kakao.maps.LatLng(36.145122, 128.393061)
-    },
-/!*    {
-        title: positions[0].title,
-        latlng: new kakao.maps.LatLng(positions[0].latlng, positions[0].latlng)
-    }*!/
-];*/
-
-// 마커 이미지의 이미지 주소입니다
-
-// var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
- 
-// for (var i = 0; i < positions.length; i ++) {
-    
-//     // 마커 이미지의 이미지 크기 입니다
-//     var imageSize = new kakao.maps.Size(24, 35); 
-    
-//     // 마커 이미지를 생성합니다
-//     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-    
-//     // 마커를 생성합니다
-//     var marker = new kakao.maps.Marker({
-//         map: map, // 마커를 표시할 지도
-//         position: positions[i].latlng, // 마커의 위치
-//         title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-//         image : markerImage // 마커 이미지 
-//     });
-
-//     // 마커에 표시할 인포윈도우를 생성합니다 
-//     var overlay = new kakao.maps.CustomOverlay({
-//         content: positions[i].content,
-//         map: map,
-//         position: marker.getPosition()
-//     });
-    
-//     overlay.setMap(null);
-    
-
-//     // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-//     // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-//     //for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-//     kakao.maps.event.addListener(marker, 'click', makeOverListener(map, marker, overlay));
-//     kakao.maps.event.addListener(marker, "click", closeOverlay());
-    
-// }
-
-
-for(let i=0; i < positions.length; i++){
-    var data = positions[i];
-    displayMarker(data);
-}
-
 
 
 // 지도에 마커를 표시하는 함수입니다    
@@ -222,18 +170,32 @@ function displayMarker(data) {
         position: marker.getPosition()
     });
     
-    var content = document.createElement('div');
-    content.innerHTML =  data.title;
-    content.style.cssText = 'background: white; border: 1px solid black';
+    var container = document.createElement('div');
+    container.id = data.stationID;
+    container.style.cssText = 'background: white; border: 1px solid black';
+
+    var content = document.createElement('a');
+    content.innerHTML =  data.stationName;
+    content.id = data.stationID;
+    container.append(content);
+    content.onclick = function(event){
+        InfoShowOn(event.target.id);
+    }
     
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
+    closeBtn.id = data.stationID;
+    container.appendChild(closeBtn);
+    overlay.setContent(container);
     closeBtn.onclick = function () {
         overlay.setMap(null);
     };
-    content.appendChild(closeBtn);
-    overlay.setContent(content);
 
+    const stationID = document.createElement('div');
+    stationID.id = data.stationID;
+    stationID.style.cssText = 'width:0px; height:0px; overflow:hidden;';
+    container.append(stationID);
+    
     kakao.maps.event.addListener(marker, 'click', function() {
         overlay.setMap(map);
     });

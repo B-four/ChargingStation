@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="ElCh.css" />
+    <link rel="stylesheet" href="../ElCh.css" />
 </head>
-<script defer src="ElCh.js"></script>
+<script defer src="../ElCh.js"></script>
 <body>
     <div id = "container">
         <ul id="category">
@@ -37,10 +37,7 @@
             <div id = "charger_info">
                 <div id = "charger_name">
                     <div id = "name">
-                        <div>
-                            <!-- 0번째에 있는 정보만 불러오기. -->
-                            <a th:text="${stations[0].stationName}"></a>
-                        </div>
+                        <div><a id = "name_text1">충전소 이름 OOOOO</a></div>
                         <!--
                         리스트형태로 전부 불러오기.
                         <ul id="chargerList">
@@ -49,7 +46,7 @@
                             </li>
                         </ul>
                         -->
-                        <div><a>충전소 부수정보 OOOOO</a></div>
+                        <div><a id = "name_text2">충전소 부수정보 OOOOO</a></div>
                     </div>
                     <div id = "close">
                         <div id = "close_inner">닫기</div>
@@ -57,12 +54,12 @@
                 </div>
                 <div id = "charger_name_2">
                     <div id = "slow">
-                        <div><img src="../img/slow.png" width="20%"><a>일반 충전기</a></div>
-                        <a>4/6 사용중 </a>
+                        <div><img src="../img/slow.png" width="20%"><a>완속 충전기</a></div>
+                        <a><span id = "slow_using">4</span>/<span id = "slow_all">6</span> 사용중 </a>
                     </div>
                     <div id = "fast">
-                        <div><img src="../img/fast.png" width="20%"><a>고속 충전기</a></div>
-                        <a>2/6 사용중 </a>
+                        <div><img src="../img/fast.png" width="20%"><a>급속 충전기</a></div>
+                        <a><span id = "fast_using">2</span>/<span id = "fast_all">6</span> 사용중 </a>
                     </div>
                 </div>
             </div>

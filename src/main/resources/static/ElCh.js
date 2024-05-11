@@ -86,9 +86,31 @@ function pointMarker(locPosition, message) {
     infowindow.open(map, marker);
 
 }
+var positions = [];
+
+window.onload = function () {
+    fetchPositions();
+}
+
+function fetchPositions() {
+    fetch('/positionList')
+        .then(response => response.json())
+        .then(data => {
+            var positions = data.map(item => ({
+                title: item.name,
+                latlng: new kakao.maps.LatLng(item.latitude, item.longitude)
+            }));
+            // positions 배열을 사용하는 로직
+            for(let i=0; i < positions.length; i++){
+                var data = positions[i];
+                displayMarker(data);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
 
 ///////////////////////////////////////////////////// 마커를 표시할 위치와 title 객체 배열입니다 
-var positions = [
+/*var positions = [
     {
         title: '디관 충전소', 
         latlng: new kakao.maps.LatLng(36.145346, 128.392459)
@@ -104,8 +126,12 @@ var positions = [
     {
         title: '본관 충전소',
         latlng: new kakao.maps.LatLng(36.145122, 128.393061)
-    }
-];
+    },
+/!*    {
+        title: positions[0].title,
+        latlng: new kakao.maps.LatLng(positions[0].latlng, positions[0].latlng)
+    }*!/
+];*/
 
 // 마커 이미지의 이미지 주소입니다
 

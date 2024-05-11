@@ -22,4 +22,8 @@ public class ChargingStationInfoDTO implements Serializable {
     private double stationLatitude;
     private double stationLongitude;
     private LocalDateTime status_UpdateTime;
+
+    public Position getPosition() {
+        return new Position(this);
+    }
 }

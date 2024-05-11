@@ -37,7 +37,18 @@
             <div id = "charger_info">
                 <div id = "charger_name">
                     <div id = "name">
-                        <div><a> 충전소 이름 OOOOO</a></div>
+                        <div>
+                            <!-- 0번째에 있는 정보만 불러오기. -->
+                            <a th:text="${stations[0].stationName}"></a>
+                        </div>
+                        <!--
+                        리스트형태로 전부 불러오기.
+                        <ul id="chargerList">
+                            <li th:each="station : ${stations}">
+                                <span th:text="${station.stationName}"></span>
+                            </li>
+                        </ul>
+                        -->
                         <div><a>충전소 부수정보 OOOOO</a></div>
                     </div>
                     <div id = "close">

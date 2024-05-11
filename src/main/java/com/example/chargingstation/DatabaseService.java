@@ -16,8 +16,8 @@ public class DatabaseService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-   public List<ChargingStationInfoDTO> fetchAllData() {
-        return jdbcTemplate.query("SELECT * FROM charging_station_info", (rs, rowNum) -> {
+    public List<ChargingStationInfoDTO> fetchAllData() {
+        return jdbcTemplate.query("SELECT * FROM charging_station_info ORDER BY station_id ASC", (rs, rowNum) -> {
             ChargingStationInfoDTO chargingStationInfoDTO = new ChargingStationInfoDTO();
             chargingStationInfoDTO.setStationAddress(rs.getString("address"));
             chargingStationInfoDTO.setChargerType(rs.getInt("charger_type"));

@@ -90,8 +90,10 @@ var positions = [];
 
 window.onload = function () {
     fetchPositions();
+    fetchStations();
 }
 
+//지도에 마킹하는 함수
 function fetchPositions() {
     fetch('/positionList')
         .then(response => response.json())
@@ -105,6 +107,29 @@ function fetchPositions() {
                 var data = positions[i];
                 displayMarker(data);
             }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function fetchStations() {
+    fetch('/stationList')
+        .then(response => response.json())
+        .then(data => {
+            var stations = data.map(item => ({
+                stationAddress: item.stationAddress,
+                chargerType: item.chargerType,
+                chargerID: item.chargerID,
+                chargerName: item.chargerName,
+                chargerStatus: item.chargerStatus,
+                chargerTerminal: item.chargerTerminal,
+                stationID: item.stationID,
+                stationName: item.stationName,
+                stationLatitude: item.stationLatitude,
+                stationLongitude: item.stationLongitude,
+                status_UpdateTime: item.status_UpdateTime
+            }));
+            // stations 배열을 사용하는 로직
+            console.log(stations);
         })
         .catch(error => console.error('Error:', error));
 }

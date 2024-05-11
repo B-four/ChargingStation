@@ -28,5 +28,9 @@ public class RestController {
         return positionList;
     }
 
+    @GetMapping("/stationList")
+    public List<ChargingStationInfoDTO> getStations() {
+        return stations;
+    }
 
 }

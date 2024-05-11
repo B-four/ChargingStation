@@ -1,5 +1,7 @@
 package com.example.chargingstation;
 
+import com.example.chargingstation.XmlMapping.Item;
+import com.example.chargingstation.XmlMapping.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -57,4 +59,11 @@ public class DatabaseService {
         );
     }
 
+    public void readApiUpdateDB(Response response){
+        List<Item> item = response.getBody().getItems().getItem();
+        for (Item i : item) {
+            String sql = "INSERT INTO charging_station_info (address, charger_type, charger_id, charger_name, charger_status, charger_terminal, station_id, station_name, lat, longi, status_updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            jdbcTemplate.update(sql, i.getStationAddress(), i.getChargerType(), i.getChargerID(), i.getChargerName(), i.getChargerStatus(), i.getChargerTerminal(), i.getStationID(), i.getStationName(), i.getStationLatitude(), i.getStationLongitude(), i.getStatus_UpdateTime());
+        }
+    }
 }

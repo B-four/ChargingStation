@@ -10,11 +10,10 @@ import java.io.IOException;
 public class ChargingStationApplication {
     public static void main(String[] args) throws IOException {
         api apiInstance = new api();
-        apiInstance.readApi();
 
         ConfigurableApplicationContext context = SpringApplication.run(ChargingStationApplication.class, args);
-        test testInstance = context.getBean(test.class);
-        testInstance.test3();
+        test test = context.getBean(test.class);
+        test.test4(apiInstance.readApi());
     }
 
 }

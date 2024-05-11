@@ -18,11 +18,11 @@ import java.net.http.HttpClient;
 
 public class api {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
-    public void readApi() throws IOException {
+    public Response readApi() throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList"); //*//*URL*//*
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=31CcKv%2BKhtHZBXu42U3lWoa2ZKMVJb7UqwkIf3sKt14hQ31xoAuvKsFBU4XCd%2FcfudH7%2B0oDm2RD09QFkq%2Feng%3D%3D"); //*//*Service Key*//*
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); //*//*페이지번호*//*
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("5", "UTF-8")); //*//*한 페이지 결과 수*//*
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("5000", "UTF-8")); //*//*한 페이지 결과 수*//*
 
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -43,8 +43,6 @@ public class api {
         rd.close();
         conn.disconnect();
 
-        System.out.println(sb.toString());
-
         String xml = sb.toString();
 
         try {
@@ -53,17 +51,20 @@ public class api {
 
             StringReader reader = new StringReader(xml);
             Response response = (Response) unmarshaller.unmarshal(reader);
-            if (response.getBody().getItems().getItem() != null) {
+ /*           if (response.getBody().getItems().getItem() != null) {
                 for (Item item : response.getBody().getItems().getItem()) {
                     System.out.println(item);
                 }
             } else {
                 System.out.println("No items found in the response.");
-            }
+            }*/
+            return response;
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+        return null;
     }
+
 }
 
 

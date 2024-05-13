@@ -12,8 +12,8 @@ public class ChargingStationApplication {
         api apiInstance = new api();
 
         ConfigurableApplicationContext context = SpringApplication.run(ChargingStationApplication.class, args);
-        test test = context.getBean(test.class);
-        test.test4(apiInstance.readApi());
+        //test test = context.getBean(test.class);
+        //test.test4(apiInstance.readApi());
     }
 
 }

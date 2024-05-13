@@ -21,7 +21,6 @@ public class test {
         this.databaseService = databaseService;
     }
 
-
     public void test2() {
         List<ChargingStationInfoDTO> data = databaseService.fetchAllData();
         for (ChargingStationInfoDTO row : data) {

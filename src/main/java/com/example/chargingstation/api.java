@@ -44,20 +44,13 @@ public class api {
         conn.disconnect();
 
         String xml = sb.toString();
-
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             StringReader reader = new StringReader(xml);
             Response response = (Response) unmarshaller.unmarshal(reader);
- /*           if (response.getBody().getItems().getItem() != null) {
-                for (Item item : response.getBody().getItems().getItem()) {
-                    System.out.println(item);
-                }
-            } else {
-                System.out.println("No items found in the response.");
-            }*/
+
             return response;
         } catch (JAXBException e) {
             e.printStackTrace();

@@ -19,12 +19,11 @@ public class ChargingStationController {
         this.databaseService = databaseService;
     }
 
-    @GetMapping("/ElCh")
+    @GetMapping("/")
     public String getStations(Model model) {
         List<ChargingStationInfoDTO> stations = databaseService.fetchAllData();
         model.addAttribute("stations", stations);
-        return "ElCh";
+        return "/ElCh";
     }
-
 
 }

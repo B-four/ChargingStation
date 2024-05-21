@@ -1,5 +1,6 @@
 package com.example.chargingstation;
 
+import com.example.chargingstation.XmlMapping.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,6 @@ public class test {
         this.databaseService = databaseService;
     }
 
-
     public void test2() {
         List<ChargingStationInfoDTO> data = databaseService.fetchAllData();
         for (ChargingStationInfoDTO row : data) {
@@ -37,6 +37,9 @@ public class test {
         }
     }
 
+    public void test4(Response response){
+        databaseService.readApiUpdateDB(response);
+    }
 }
 
 // commit and push test

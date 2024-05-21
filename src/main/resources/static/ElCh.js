@@ -31,8 +31,7 @@ function InfoShowOn(stationID){
             if (item.chargerStatus != 1){
                 slow_using_num++;
             }
-        }
-        if (item.chargerType == 2) {
+        }else if(item.chargerType == 2) {
             fast_all_num++;
             if (item.chargerStatus != 1){
                 fast_using_num++;

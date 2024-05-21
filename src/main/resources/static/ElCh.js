@@ -16,28 +16,59 @@ function UpdateInfo(stationID){
     });
     return foundIndexes;
 }
-// 충전소 정보 인터페이스 스윕
-function InfoShowOn(stationID){
+
+//충전소 상태별 색상 변경
+var slow_using_num ;
+var slow_all_num ;
+var fast_using_num ;
+var fast_all_num ;
+
+function resetCounters() {
+    slow_using_num = 0;
+    slow_all_num = 0;
+    fast_using_num = 0;
+    fast_all_num = 0;
+}
+
+function changeMarkerColor(stationID) {
     let data = UpdateInfo(stationID);
-    document.getElementById("name_text1").innerHTML = data[0].stationName;
-    document.getElementById("name_text2").innerHTML = data[0].stationAddress;
-    var slow_using_num = 0;
-    var slow_all_num= 0;
-    var fast_using_num=0;
-    var fast_all_num=0;
-    data.forEach(function(item, index) {
+    resetCounters();
+    slowFast(data);
+
+    var imgSrc;
+    if (slow_using_num == slow_all_num && fast_using_num == fast_all_num) {
+        imgSrc = "../img/marker1.png";
+    } else if (0 < slow_using_num && slow_using_num < slow_all_num || 0 < fast_using_num && fast_using_num < fast_all_num) {
+        imgSrc = "../img/marker2.png";
+    } else {
+        imgSrc = "../img/marker3.png";
+    }
+    return imgSrc;
+}
+
+function slowFast(data) {
+    data.forEach(function(item) {
         if (item.chargerType == 1) {
             slow_all_num++;
-            if (item.chargerStatus != 1){
+            if (item.chargerStatus != 1) {
                 slow_using_num++;
             }
-        }else if(item.chargerType == 2) {
+        } else if (item.chargerType == 2) {
             fast_all_num++;
-            if (item.chargerStatus != 1){
+            if (item.chargerStatus != 1) {
                 fast_using_num++;
             }
         }
     });
+}
+
+// 충전소 정보 인터페이스 스윕
+function InfoShowOn(stationID) {
+    let data = UpdateInfo(stationID);
+    document.getElementById("name_text1").innerHTML = data[0].stationName;
+    document.getElementById("name_text2").innerHTML = data[0].stationAddress;
+    resetCounters();
+    slowFast(data);
     document.getElementById("slow_using").innerHTML = slow_using_num;
     document.getElementById("slow_all").innerHTML = slow_all_num;
     document.getElementById("fast_using").innerHTML = fast_using_num;
@@ -153,9 +184,9 @@ function fetchStations() {
 
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(data) {
-    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    var imageSrc=changeMarkerColor(data.stationID);
     //마커 이미지 크기 표시
-    var imageSize = new kakao.maps.Size(24, 35);
+    var imageSize = new kakao.maps.Size(50, 50);
     // 마커 이미지를 생성합니다
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -177,7 +208,7 @@ function displayMarker(data) {
     content.innerHTML =  data.stationName;
     content.id = data.stationID;
     container.append(content);
-    content.onclick = function(event){
+    content.onmouseover = function(event){
         InfoShowOn(event.target.id);
     }
 
@@ -195,7 +226,7 @@ function displayMarker(data) {
     stationID.style.cssText = 'width:0px; height:0px; overflow:hidden;';
     container.append(stationID);
 
-    kakao.maps.event.addListener(marker, 'click', function() {
+    kakao.maps.event.addListener(marker, 'mouseover', function() {
         overlay.setMap(map);
     });
 }

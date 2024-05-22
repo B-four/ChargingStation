@@ -24,7 +24,7 @@ a {text-decoration: none;}
 #update_time { float:left; width:8vw; height:6vh; position:absolute; top:10px; left:41vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; font-size: 1vw;}
 
 /* info , map */
-#container {display: flex;}
+#container {display: flex; }
 
 /* map */
 #map {width: 100vw; height: 100vh;}

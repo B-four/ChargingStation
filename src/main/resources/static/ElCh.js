@@ -85,6 +85,7 @@ function InfoShowOff(){
 // 충전소 정보 인터페이스 닫기 이벤트
 document.getElementById("close").addEventListener("click", function(){
     InfoShowOff();
+
 },false)
 
 //==================================================
@@ -135,7 +136,7 @@ function pointMarker(locPosition, message) {
         backgroundColor: "#eee",
         borderColor: "#2db400",
         borderWidth: 5,
-        anchorSize: new kakao.maps.Size(30, 30),
+        anchorSize: new kakao.maps.Size(50, 50),
         anchorSkew: true,
         anchorColor: "#eee",
         pixelOffset: new kakao.maps.Point(20, -20)
@@ -202,11 +203,12 @@ function displayMarker(data) {
 
     var container = document.createElement('div');
     container.id = data.stationID;
-    container.style.cssText = 'background: white; border: 1px solid black';
+    container.style.cssText = 'background: white; border: 1px solid black ; padding : 3px ; border-radius : 10px';
 
     var content = document.createElement('a');
     content.innerHTML =  data.stationName;
     content.id = data.stationID;
+    content.style.cssText = 'padding : 2px';
     container.append(content);
     content.onmouseover = function(event){
         InfoShowOn(event.target.id);
@@ -214,6 +216,7 @@ function displayMarker(data) {
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
+    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white';
     closeBtn.id = data.stationID;
     container.appendChild(closeBtn);
     overlay.setContent(container);
@@ -226,7 +229,7 @@ function displayMarker(data) {
     stationID.style.cssText = 'width:0px; height:0px; overflow:hidden;';
     container.append(stationID);
 
-    kakao.maps.event.addListener(marker, 'mouseover', function() {
+    kakao.maps.event.addListener(marker, 'click', function() {
         overlay.setMap(map);
     });
 }
@@ -280,3 +283,41 @@ click2.addEventListener("click",function(){
     console.log(distance);
 
 },false)
+
+function calLength(){
+    let uniqueStationIds = new Set();//id별로 비교해서 id하나만 남기기
+    let uniqueStations = [];
+    stations.filter(station => {
+        if (!uniqueStationIds.has(station.stationID))
+        {
+            uniqueStationIds.add(station.stationID);
+            uniqueStations.push(station);
+        }
+    });
+
+    let distance;
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var locPosition = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude)
+        for(i=0; i<uniqueStations.length; i++){
+            console.log("asdf");
+            uniqueStations.some((station) =>{
+                if (station.stationID === uniqueStationIds[i])
+                {
+                    var polygon = new kakao.maps.Polygon({path: []});
+                    var path = polygon.getPath();
+                    // 좌표 배열에 위치를 추가합니다
+                    path.push(station.latlng);
+                    path.push(locPosition);
+                    polygon.setPath(path);
+
+                    console.log(station.latlng);
+                    console.log(locPosition);
+                    distance = Math.round(polygon.getLength()) // 선의 총 거리를 계산합니다
+                    return true;
+                }
+                return false;
+            })
+        }
+    });
+    console.log(distance);
+}

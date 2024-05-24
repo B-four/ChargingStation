@@ -32,17 +32,14 @@ a {text-decoration: none;}
 /* info */
 #info { width: 0vw; height: 100vh; overflow: hidden; align-content: space-around;
     background-color: white; box-shadow: 0.5vw 0vw 1vw -0.1vw inset gray;}
-#charger_info {width: 90%; height: 55%; margin: auto;
+#charger_info {width: 95%; height: 55%; margin: auto;
     /* box-shadow: 1vw 1vw 1vw 0.1vw    gray; */
-}
-#review { width: 90%; height: 35%; margin: auto;
-    /* box-shadow: 0.5vw 0vw 1vw -0.1vw inset gray; */
 }
 
 #charger_name { display: flex; width: 100%; height: 30%; border-radius: 2%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
-#name { position:relative; left:3%; width: 100%; font-size: 2.5vw; align-content: center;}
-#name :nth-child(2) { position:relative; left:3%; font-size: 1.2vw; }
-#close { width: auto; align-content: center; position: relative; left:-5%;}
+#name { width: 90%; font-size: 2.5vw; align-content: center; padding-left: 3%}
+#name :nth-child(2) { font-size: 55%;}
+#close { width: auto; align-content: center; margin-right: 3%}
 #close_inner { width: 7.65vh; height: 7.65vh; font-size: 2.7vh; text-wrap: nowrap; text-align:center;align-content: center; border-radius: 20%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
 #close:hover {cursor: pointer;}
 #charger_name_2 { height: 70%; border-radius: 2%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}

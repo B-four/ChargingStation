@@ -37,10 +37,10 @@ a {text-decoration: none;}
 }
 
 #charger_name { display: flex; width: 100%; height: 30%; border-radius: 2%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
-#name { width: 90%; font-size: 2.5vw; align-content: center; padding-left: 3%}
+#name { width: 90%; font-size: 1.5vw; align-content: center; }
 #name :nth-child(2) { font-size: 55%;}
-#close { width: auto; align-content: center; margin-right: 3%}
-#close_inner { width: 7.65vh; height: 7.65vh; font-size: 2.7vh; text-wrap: nowrap; text-align:center;align-content: center; border-radius: 20%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
+#close { width: auto; align-content: center;}
+#close_inner { width: 5.65vh; height: 5.65vh; font-size: 1.7vh; text-wrap: nowrap; text-align:center;align-content: center; border-radius: 20%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
 #close:hover {cursor: pointer;}
 #charger_name_2 { height: 70%; border-radius: 2%; border: 1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);}
 
@@ -50,7 +50,7 @@ a {text-decoration: none;}
     position: relative;
     top: 5%;
     left: 10%;
-    font-size: 1.7vw;
+    font-size: 1.0vw;
     align-content: center;
 }
 #slow div {position: relative; left: -10%;}
@@ -61,15 +61,12 @@ a {text-decoration: none;}
     position: relative;
     top: 5%;
     left: 10%;
-    font-size: 1.7vw;
+    font-size: 1.0vw;
     align-content: center;
 }
 #fast div {position: relative; left: -10%;}
 #fast div a {position:absolute; top:20%;}
 
-#review_name { height: 35%; font-size: 2vw;}
-#review_name div {  height: 100%; align-content: center; }
-#review_content { height: 65%; font-size: 1.2vw; }
 
 
 

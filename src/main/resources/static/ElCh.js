@@ -16,7 +16,6 @@ function UpdateInfo(stationID){
     });
     return foundIndexes;
 }
-
 //충전소 상태별 색상 변경
 var slow_using_num ;
 var slow_all_num ;
@@ -61,7 +60,6 @@ function slowFast(data) {
         }
     });
 }
-
 // 충전소 정보 인터페이스 스윕
 function InfoShowOn(stationID) {
     let data = UpdateInfo(stationID);
@@ -136,7 +134,7 @@ function pointMarker(locPosition, message) {
         backgroundColor: "#eee",
         borderColor: "#2db400",
         borderWidth: 5,
-        anchorSize: new kakao.maps.Size(50, 50),
+        anchorSize: new kakao.maps.Size(30, 30),
         anchorSkew: true,
         anchorColor: "#eee",
         pixelOffset: new kakao.maps.Point(20, -20)
@@ -147,7 +145,7 @@ function pointMarker(locPosition, message) {
 
 }
 
-var stations = [];
+var stations = []; //정보 배열
 
 window.onload = function () {
     fetchStations();
@@ -233,7 +231,7 @@ function displayMarker(data) {
         overlay.setMap(map);
     });
 }
-
+//
 //==================================================
 
 
@@ -255,69 +253,453 @@ function closeOverlay() {
     overlay.setMap(null);
 }
 
+
+
 //거래 계산 함수
 //현위치, 마커들 거리 위치 차이 계산
-click2.addEventListener("click",function(){
-    console.log("mmm");
+///////////////////////////////////////////////// click2 거리 우선 기능
+var markers = []; // 모든 마커를 저장할 배열입니다.
+var overlays = []; // 모든 오버레이를 저장할 배열입니다.
 
-    // // 마커와 인포윈도우를 표시합니다
-    // pointMarker(p1, message);
-    var p1 = new kakao.maps.LatLng(36.145357, 128.392559); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-    var polygon = new kakao.maps.Polygon({
-        path: [
-            new kakao.maps.LatLng(33.452344169439975, 126.56878163224233),
-            new kakao.maps.LatLng(33.452739313807456, 126.5709308145358)
-        ]
+
+function removeMarkers() {
+    markers.forEach(marker => marker.setMap(null));
+    markers = [];
+}
+
+function removeOverlays() {
+    overlays.forEach(overlay => overlay.setMap(null));
+    overlays = [];
+}
+
+click1.addEventListener("click", function(){
+    removeMarkers();
+    removeOverlays();
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+
+        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+            message = '<div style="padding:5px;">현재 위치 다시검색</div>'; // 인포윈도우에 표시될 내용입니다
+
+        // 마커와 인포윈도우를 표시합니다
+        infoInPointMarker(locPosition, message);
+
+        // 지도 중심좌표를 접속위치로 변경합니다
+        map.setCenter(locPosition);
+    });
+}, false);
+
+click2.addEventListener("click", function(){
+    removeMarkers();
+    removeOverlays();
+    const aa = calLengthByDistance();
+    console.log(+aa);
+}, false);
+
+click3.addEventListener("click", function(){
+    removeMarkers();
+    removeOverlays();
+    calLengthByAvailability();
+}, false);
+
+click4.addEventListener("click", function(){
+    removeMarkers();
+    removeOverlays();
+    calLengthByFastCharger();
+}, false);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 빈칸 우선
+
+function calLengthByDistance() {
+    removeDuplicateStations();
+    let closestStations;
+    navigator.geolocation.getCurrentPosition(position => {
+        const currentPosition = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+
+        closestStations = findClosestStations(currentPosition, uniqueStations);
+
+        console.log("Closest 5 stations:", closestStations);
+
+        closestStations.forEach(station => {
+            var p1 = new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng);
+            var p2 = station.latlng;
+            var polygon = new kakao.maps.Polygon({
+                path: [p1, p2]
+            });
+
+            var path = polygon.getPath();
+            path.push(p1);
+            polygon.setPath(path);
+
+            var distance = Math.round(polygon.getLength());
+            var message = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>';
+            DistanceDisplayMarker(station);
+            console.log("distance to station:", station, distance);
+        });
+    });
+    return closestStations;
+}
+function DistanceDisplayMarker(data) {
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    //마커 이미지 크기 표시
+    var imageSize = new kakao.maps.Size(24, 35);
+    // 마커 이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: data.latlng,
+        image : markerImage // 마커 이미지
+    });
+    var overlay = new kakao.maps.CustomOverlay({
+        yAnchor: 3,
+        position: marker.getPosition()
     });
 
-    //path배열 추가
-    var path = polygon.getPath();
-    // 좌표 배열에 클릭한 위치를 추가합니다
-    path.push(p1);
-    polygon.setPath(path);
+    var container = document.createElement('div');
+    container.id = data.stationID;
+    container.style.cssText = 'background: red; border: 1px solid black';
+
+    var content = document.createElement('a');
+    content.innerHTML =  data.stationName;
+    content.id = data.stationID;
+    container.append(content);
+    content.onclick = function(event){
+        InfoShowOn(event.target.id);
+    }
+
+    var closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '닫기';
+    closeBtn.id = data.stationID;
+    container.appendChild(closeBtn);
+    overlay.setContent(container);
+    closeBtn.onclick = function () {
+        overlay.setMap(null);
+    };
+
+    const stationID = document.createElement('div');
+    stationID.id = data.stationID;
+    stationID.style.cssText = 'width:0px; height:0px; overflow:hidden;';
+    container.append(stationID);
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+        overlay.setMap(map);
+    });
 
 
-    var distance = Math.round(polygon.getLength()), // 선의 총 거리를 계산합니다
-        message = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
-    pointMarker(p1, message);
-    console.log(distance);
+    marker.setMap(map);
 
-},false)
+    markers.push(marker);
+    overlays.push(overlay);
+}
 
-function calLength(){
-    let uniqueStationIds = new Set();//id별로 비교해서 id하나만 남기기
-    let uniqueStations = [];
-    stations.filter(station => {
-        if (!uniqueStationIds.has(station.stationID))
-        {
-            uniqueStationIds.add(station.stationID);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 빈칸 우선
+function calLengthByAvailability() {
+    removeDuplicateStationsByAvailability();
+    navigator.geolocation.getCurrentPosition(position => {
+        const currentPosition = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+
+        const closestStations = findClosestStationsByAvailability(currentPosition, uniqueStationsByAvailability, 6);
+        console.log("Closest 6 stations by 빈칸우선:", closestStations);
+
+        closestStations.forEach(station => {
+            var p1 = new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng);
+            var p2 = station.latlng;
+            var polygon = new kakao.maps.Polygon({
+                path: [p1, p2]
+            });
+
+            var path = polygon.getPath();
+            path.push(p1);
+            polygon.setPath(path);
+
+            var distance = Math.round(polygon.getLength());
+            var message = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m, 빈 충전기: ' + station.availableChargers + '</div>';
+            AvailabilityDisplayMarker(station);
+            console.log(`Distance to station ${station.name} (Address: ${station.stationAddress}): ${station.distance} meters, Available chargers: ${station.availableChargers}`);
+        });
+    });
+}
+function AvailabilityDisplayMarker(data) {
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    //마커 이미지 크기 표시
+    var imageSize = new kakao.maps.Size(24, 35);
+    // 마커 이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: data.latlng,
+        image : markerImage // 마커 이미지
+    });
+    var overlay = new kakao.maps.CustomOverlay({
+        yAnchor: 3,
+        position: marker.getPosition()
+    });
+
+    var container = document.createElement('div');
+    container.id = data.stationID;
+    container.style.cssText = 'background: red; border: 1px solid black';
+
+    var content = document.createElement('a');
+    content.innerHTML =  data.stationName;
+    content.id = data.stationID;
+    container.append(content);
+    content.onclick = function(event){
+        InfoShowOn(event.target.id);
+    }
+
+    var closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '닫기';
+    closeBtn.id = data.stationID;
+    container.appendChild(closeBtn);
+    overlay.setContent(container);
+    closeBtn.onclick = function () {
+        overlay.setMap(null);
+    };
+
+    const stationID = document.createElement('div');
+    stationID.id = data.stationID;
+    stationID.style.cssText = 'width:0px; height:0px; overflow:hidden;';
+    container.append(stationID);
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+        overlay.setMap(map);
+    });
+
+
+    marker.setMap(map);
+
+    markers.push(marker);
+    overlays.push(overlay);
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 고속우선
+function calLengthByFastCharger() {
+    removeDuplicateStationsByFastCharger();
+    navigator.geolocation.getCurrentPosition(position => {
+        const currentPosition = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+
+        const closestStations = findClosestStationsByFastCharger(currentPosition, uniqueStationsByFastCharger, 5);
+        console.log("Closest 5 stations with fast chargers:", closestStations);
+        //closestStations을 이용
+        closestStations.forEach(station => {
+            var p1 = new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng);
+            var p2 = station.latlng;
+            var polygon = new kakao.maps.Polygon({
+                path: [p1, p2]
+            });
+
+            var path = polygon.getPath();
+            path.push(p1);
+            polygon.setPath(path);
+
+            var distance = Math.round(polygon.getLength());
+            var message = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m, 빈 충전기: ' + station.availableChargers + '</div>';
+            FastChargerDisplayMarker(station);
+            console.log(`Distance to station ${station.name} (Address: ${station.stationAddress}): ${station.distance} meters, Available chargers: ${station.availableChargers}`);
+        });
+    });
+}
+function FastChargerDisplayMarker(data) {
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    //마커 이미지 크기 표시
+    var imageSize = new kakao.maps.Size(24, 35);
+    // 마커 이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: data.latlng,
+        image : markerImage // 마커 이미지
+    });
+    var overlay = new kakao.maps.CustomOverlay({
+        yAnchor: 3,
+        position: marker.getPosition()
+    });
+
+    var container = document.createElement('div');
+    container.id = data.stationID;
+    container.style.cssText = 'background: red; border: 1px solid black';
+
+    var content = document.createElement('a');
+    content.innerHTML =  data.stationName;
+    content.id = data.stationID;
+    container.append(content);
+    content.onclick = function(event){
+        InfoShowOn(event.target.id);
+    }
+
+    var closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '닫기';
+    closeBtn.id = data.stationID;
+    container.appendChild(closeBtn);
+    overlay.setContent(container);
+    closeBtn.onclick = function () {
+        overlay.setMap(null);
+    };
+
+    const stationID = document.createElement('div');
+    stationID.id = data.stationID;
+    stationID.style.cssText = 'width:0px; height:0px; overflow:hidden;';
+    container.append(stationID);
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+        overlay.setMap(map);
+    });
+    marker.setMap(map);
+
+    markers.push(marker);
+    overlays.push(overlay);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function infoInPointMarker(position, message) {
+    var marker = new kakao.maps.Marker({
+        position: position
+    });
+
+    var overlay = new kakao.maps.CustomOverlay({
+        content: message,
+        position: position,
+        xAnchor: 0.5,
+        yAnchor: 1.5
+    });
+
+    marker.setMap(map);
+    overlay.setMap(map);
+
+    markers.push(marker);
+    overlays.push(overlay);
+}
+
+// 거리 우선 중복 제거
+function removeDuplicateStations() {
+    const uniqueIds = new Set();
+    uniqueStations = [];
+
+    stations.forEach(station => {
+        if (!uniqueIds.has(station.stationID)) {
+            uniqueIds.add(station.stationID);
             uniqueStations.push(station);
         }
     });
+}
 
-    let distance;
-    navigator.geolocation.getCurrentPosition(function(position) {
-        var locPosition = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude)
-        for(i=0; i<uniqueStations.length; i++){
-            console.log("asdf");
-            uniqueStations.some((station) =>{
-                if (station.stationID === uniqueStationIds[i])
-                {
-                    var polygon = new kakao.maps.Polygon({path: []});
-                    var path = polygon.getPath();
-                    // 좌표 배열에 위치를 추가합니다
-                    path.push(station.latlng);
-                    path.push(locPosition);
-                    polygon.setPath(path);
+// 빈칸 우선 중복 제거
+function removeDuplicateStationsByAvailability() {
+    const stationMap = new Map();
 
-                    console.log(station.latlng);
-                    console.log(locPosition);
-                    distance = Math.round(polygon.getLength()) // 선의 총 거리를 계산합니다
-                    return true;
-                }
-                return false;
-            })
+    stations.forEach(station => {
+        if (!stationMap.has(station.stationAddress)) {
+            stationMap.set(station.stationAddress, {
+                ...station,
+                availableChargers: station.chargerStatus === 1 ? 1 : 0
+            });
+        } else {
+            const existingStation = stationMap.get(station.stationAddress);
+            existingStation.availableChargers += station.chargerStatus === 1 ? 1 : 0;
         }
     });
-    console.log(distance);
+
+    uniqueStationsByAvailability = Array.from(stationMap.values());
+}
+
+// 고속 충전기 우선 중복 제거
+function removeDuplicateStationsByFastCharger() {
+    const stationMap = new Map();
+
+    stations.forEach(station => {
+        if (station.chargerType === 2) {
+            if (!stationMap.has(station.stationAddress)) {
+                stationMap.set(station.stationAddress, {
+                    ...station,
+                    availableChargers: station.chargerStatus === 1 ? 1 : 0
+                });
+            } else {
+                const existingStation = stationMap.get(station.stationAddress);
+                existingStation.availableChargers += station.chargerStatus === 1 ? 1 : 0;
+            }
+        }
+    });
+
+    uniqueStationsByFastCharger = Array.from(stationMap.values());
+}
+
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    function toRad(value) {
+        return value * Math.PI / 180;
+    }
+
+    const R = 6371; // Radius of the Earth in km
+    const dLat = toRad(lat2 - lat1);
+    const dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c * 1000; // Distance in meters
+    return distance;
+}
+
+function findClosestStations(currentPosition, uniqueStations) {
+    uniqueStations.forEach(station => {
+        const distance = calculateDistance(
+            currentPosition.lat,
+            currentPosition.lng,
+            station.latlng.getLat(),
+            station.latlng.getLng()
+        );
+        station.distance = distance;
+    });
+
+    uniqueStations.sort((a, b) => a.distance - b.distance);
+
+    return uniqueStations.slice(0, 5);
+}
+
+function findClosestStationsByAvailability(currentPosition, uniqueStations, numberOfStations) {
+    uniqueStations.forEach(station => {
+        const distance = calculateDistance(
+            currentPosition.lat,
+            currentPosition.lng,
+            station.latlng.getLat(),
+            station.latlng.getLng()
+        );
+        station.distance = distance;
+    });
+
+    uniqueStations.sort((a, b) => {
+        if (a.distance === b.distance) {
+            return b.availableChargers - a.availableChargers;
+        }
+        return a.distance - b.distance;
+    });
+
+    return uniqueStations.slice(0, numberOfStations);
+}
+
+function findClosestStationsByFastCharger(currentPosition, uniqueStationsByFastCharger, numberOfStations) {
+    uniqueStationsByFastCharger.forEach(station => {
+        const distance = calculateDistance(
+            currentPosition.lat,
+            currentPosition.lng,
+            station.latlng.getLat(),
+            station.latlng.getLng()
+        );
+        station.distance = distance;
+    });
+
+    uniqueStationsByFastCharger.sort((a, b) => a.distance - b.distance);
+
+    return uniqueStationsByFastCharger.slice(0, numberOfStations);
 }

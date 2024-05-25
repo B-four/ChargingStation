@@ -38,6 +38,7 @@ public class test {
     }
 
     public void test4(Response response){
+        System.out.println("complete test4!!");
         databaseService.readApiUpdateDB(response);
     }
 }

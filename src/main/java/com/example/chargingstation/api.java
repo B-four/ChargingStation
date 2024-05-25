@@ -2,6 +2,7 @@ package com.example.chargingstation;
 
 import com.example.chargingstation.XmlMapping.Item;
 import com.example.chargingstation.XmlMapping.Response;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,7 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 
-
+@Component
 public class api {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     public Response readApi() throws IOException {

@@ -62,8 +62,18 @@ public class DatabaseService {
     public void readApiUpdateDB(Response response){
         List<Item> item = response.getBody().getItems().getItem();
         for (Item i : item) {
-            String sql = "INSERT INTO charging_station_info (address, charger_type, charger_id, charger_name, charger_status, charger_terminal, station_id, station_name, lat, longi, status_updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            jdbcTemplate.update(sql, i.getStationAddress(), i.getChargerType(), i.getChargerID(), i.getChargerName(), i.getChargerStatus(), i.getChargerTerminal(), i.getStationID(), i.getStationName(), i.getStationLatitude(), i.getStationLongitude(), i.getStatus_UpdateTime());
+            String checkSql = "SELECT COUNT(*) FROM charging_station_info WHERE charger_id = ? AND station_id = ?";
+            Integer count = jdbcTemplate.queryForObject(checkSql, new Object[]{i.getChargerID(), i.getStationID()}, Integer.class);
+            
+            if (count != null && count > 0) {
+                // If the data already exists, update it
+                String updateSql = "UPDATE charging_station_info SET address = ?, charger_type = ?, charger_name = ?, charger_status = ?, charger_terminal = ?, station_name = ?, lat = ?, longi = ?, status_updatetime = ? WHERE charger_id = ? AND station_id = ?";
+                jdbcTemplate.update(updateSql, i.getStationAddress(), i.getChargerType(), i.getChargerName(), i.getChargerStatus(), i.getChargerTerminal(), i.getStationName(), i.getStationLatitude(), i.getStationLongitude(), i.getStatus_UpdateTime(), i.getChargerID(), i.getStationID());
+            } else {
+                // If the data does not exist, insert it
+                String insertSql = "INSERT INTO charging_station_info (address, charger_type, charger_id, charger_name, charger_status, charger_terminal, station_id, station_name, lat, longi, status_updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                jdbcTemplate.update(insertSql, i.getStationAddress(), i.getChargerType(), i.getChargerID(), i.getChargerName(), i.getChargerStatus(), i.getChargerTerminal(), i.getStationID(), i.getStationName(), i.getStationLatitude(), i.getStationLongitude(), i.getStatus_UpdateTime());
+            }
         }
     }
 }

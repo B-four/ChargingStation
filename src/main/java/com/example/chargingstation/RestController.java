@@ -36,13 +36,10 @@ public class RestController {
     }
     
     @GetMapping("/updateData")
-    public List<Position> updateData() throws IOException
+    public List<ChargingStationInfoDTO> updateData() throws IOException
     { // IOException을 처리하도록 메서드 선언을 수정합니다.
-        Response response = apiInstance.readApi(); // apiInstance.readApi()를 호출하여 Response 객체를 생성합니다.
-        
-        test testObject = new test(databaseService);
-        testObject.test4(response);
-        List<Position> updatedPositions = getPositions();
-        return updatedPositions;
+        databaseService.readApiUpdateDB(api.readApi());
+        stations = databaseService.fetchAllData();
+        return stations;
     }
 }

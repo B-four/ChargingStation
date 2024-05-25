@@ -12,10 +12,11 @@ import java.util.Map;
 @Component
 public class DatabaseService {
     private final JdbcTemplate jdbcTemplate;
-
+    private final api apiInstance;
     @Autowired
-    public DatabaseService(JdbcTemplate jdbcTemplate) {
+    public DatabaseService(JdbcTemplate jdbcTemplate, api apiInstance) {
         this.jdbcTemplate = jdbcTemplate;
+        this.apiInstance = apiInstance;
     }
 
     public List<ChargingStationInfoDTO> fetchAllData() {

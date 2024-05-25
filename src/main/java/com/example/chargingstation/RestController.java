@@ -38,7 +38,7 @@ public class RestController {
     @GetMapping("/updateData")
     public List<ChargingStationInfoDTO> updateData() throws IOException
     { // IOException을 처리하도록 메서드 선언을 수정합니다.
-        databaseService.readApiUpdateDB(api.readApi());
+        //databaseService.readApiUpdateDB();
         stations = databaseService.fetchAllData();
         return stations;
     }

@@ -2,6 +2,7 @@ package com.example.chargingstation;
 
 import com.example.chargingstation.XmlMapping.Item;
 import com.example.chargingstation.XmlMapping.Response;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,10 +16,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 
-
+@Component
 public class api {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
-    public Response readApi() throws IOException {
+    public static Response readApi() throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList"); //*//*URL*//*
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=31CcKv%2BKhtHZBXu42U3lWoa2ZKMVJb7UqwkIf3sKt14hQ31xoAuvKsFBU4XCd%2FcfudH7%2B0oDm2RD09QFkq%2Feng%3D%3D"); //*//*Service Key*//*
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); //*//*페이지번호*//*

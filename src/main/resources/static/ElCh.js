@@ -641,3 +641,48 @@ function findClosestStationsByFastCharger(currentPosition, uniqueStationsByFastC
 
     return uniqueStationsByFastCharger.slice(0, numberOfStations);
 }
+
+// 데이터베이스에서 값을 가져와서 마커를 찍는 함수
+function refreshMarkers() {
+    console.log("refreshMarkers function started"); // 함수 시작 로그
+
+    fetch('/updateData')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Fetched data: ", data); // 가져온 데이터 로그
+            for (let i = 0; i < data.length; i++) {
+                let position = new kakao.maps.LatLng(data[i].lat, data[i].lng);
+                let marker = new kakao.maps.Marker({
+                    position: position
+                });
+                marker.setMap(map);
+                markers.push(marker);
+            }
+            console.log("Markers created: ", markers); // 생성된 마커 로그
+        })
+        .catch(error => {
+            console.error("Error in refreshMarkers: ", error); // 에러 로그
+        });
+}
+
+let countdown = 10;
+
+// 카운트 다운을 업데이트하는 함수
+function updateCountdown() {
+    // HTML에서 카운트 다운을 표시하는 요소를 찾습니다.
+    const countdownElement = document.querySelector('#update_time span');
+
+    // 카운트 다운을 업데이트합니다.
+    countdownElement.textContent = countdown;
+
+    // 카운트 다운이 0이 되면 다시 10으로 설정합니다.
+    if (countdown === 0) {
+        countdown = 10;
+    } else {
+        countdown--;
+    }
+}
+
+// 10초마다 refreshMarkers 함수를 호출합니다.
+setInterval(refreshMarkers, 10000);
+setInterval(updateCountdown, 1000);

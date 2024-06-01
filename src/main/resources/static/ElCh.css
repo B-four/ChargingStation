@@ -19,10 +19,17 @@ a {text-decoration: none;}
 #category li .cafe {background-position: -10px -144px;}
 #category li .store {background-position: -10px -180px;}
 #category li.on .category_bg {background-position-x:-46px;}
+/*#category li .location {    background:url("./img/currentLocation.png") no-repeat; width: 2vw;height: 3.5vh;}*/
 
 /* 업데이트 타임 보드 */
-#update_time { float:left; width:8vw; height:6vh; position:absolute; top:10px; left:41vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; font-size: 1vw;}
-
+#update_time { float:left; width:8vw; height:8vh; position:absolute; top:10px; left:51vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; font-size: 1vw;}
+#update_time img{
+    width: 2vw;
+    height: 3.5vh;
+}
+#update_time:hover{
+    background: #ffe6e6;border-left:1px solid #acacac;margin: 1px;
+}
 /* info , map */
 #container {display: flex; }
 
@@ -91,3 +98,26 @@ a {text-decoration: none;}
 .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
 .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');}
 .info .link {color: #5085BB;}
+
+
+/*login*/
+#loginForm { position:absolute; top:10px; left:92vw;border-radius: 5px;border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center;}
+a.button {
+    display: inline-block;
+    padding: 0.5vh 1vw;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.2vw;
+    color : gray;
+}
+
+#loginForm:hover{
+    background-color: #ffe6e6;
+    margin: 1px;
+}
+
+#bookMark{ position:absolute; top:10px; left:89vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; color:darkgoldenrod; font-size: 1.2vw; padding: 0.5vh 0.5vw;}
+#bookMark:hover{
+    background-color: #ffe6e6;
+    margin: 1px;
+}

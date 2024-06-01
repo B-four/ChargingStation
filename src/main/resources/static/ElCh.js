@@ -338,7 +338,7 @@ function infoDisplayMarker(data, index) {
     });
     var container = document.createElement('div');
     container.id = data.stationID;
-    container.style.cssText = 'background: white; border: 1px solid black ; position : relative ; top : 350px ;';
+    container.style.cssText = 'background: white; border: 1px solid black ; position : relative ; top : 150px ;';
     resetCounters();
     slowFast(UpdateInfo(data.stationID));
     var content = document.createElement('div');
@@ -665,24 +665,6 @@ function refreshMarkers() {
         });
 }
 
-let countdown = 10;
-
-// 카운트 다운을 업데이트하는 함수
-function updateCountdown() {
-    // HTML에서 카운트 다운을 표시하는 요소를 찾습니다.
-    const countdownElement = document.querySelector('#update_time span');
-
-    // 카운트 다운을 업데이트합니다.
-    countdownElement.textContent = countdown;
-
-    // 카운트 다운이 0이 되면 다시 10으로 설정합니다.
-    if (countdown === 0) {
-        countdown = 10;
-    } else {
-        countdown--;
-    }
-}
-
-// 10초마다 refreshMarkers 함수를 호출합니다.
-setInterval(refreshMarkers, 10000);
-setInterval(updateCountdown, 1000);
+document.getElementById("update_time").addEventListener("click", function (){
+    refreshMarkers();
+})

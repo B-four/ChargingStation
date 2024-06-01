@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>전기차 충전소 포인트</title>
-    <link rel="stylesheet" href="../ElCh.css" />
+    <link rel="stylesheet" href="./ElCh.css" />
 </head>
-<script defer src="../ElCh.js"></script>
+<script defer src="./ElCh.js"></script>
 <body>
     <div id = "container">
         <ul id="category">
@@ -14,9 +14,9 @@
                 <span class="category_bg cafe"></span>
                 다시<br>검색
             </li>       
-            <li id="click2" data-order="1"> 
-                <span class="category_bg mart"></span>
-                거리<br>우선
+            <li id="click2" data-order="1">
+                <span class="location"></span>
+                현재<br>위치
             </li>  
             <li id="click3" data-order="2"> 
                 <span class="category_bg pharmacy"></span>
@@ -25,9 +25,15 @@
             <li id="click4" data-order="4"> 
                 <span class="category_bg oil"></span>
                 고속<br>우선
-            </li>      
+            </li>
+            <li id="click5" data-order="5">
+                <span class="category_bg mart"></span>
+                거리<br>우선
+            </li>
         </ul>
-        <div id = "update_time">상태 갱신 까지<br><span>10</span>/초</div>
+        <div id = "update_time">새로고침<br><img src="../img/re.png"></div>
+        <div id = "bookMark">★</div>
+        <div id = "loginForm"><a href="/login" class="button">로그인</a></div>
         <div id = "map"></div>
         <div id = "info">
             <div id = "charger_info">
@@ -53,6 +59,6 @@
             </div>
         </div>
      </div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=da3c958f30a61f3f8ef890f2e25f2888"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eb4681b5ea7c0c09ec67660cefc45851"></script>
 </body>
 </html>

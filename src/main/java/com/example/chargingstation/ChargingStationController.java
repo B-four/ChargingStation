@@ -25,5 +25,9 @@ public class ChargingStationController {
         model.addAttribute("stations", stations);
         return "/ElCh";
     }
+    @GetMapping("/login")
+    public String getLogin(Model model) {
+        return "/login";
+    }
 
 }

@@ -22,7 +22,7 @@ a {text-decoration: none;}
 /*#category li .location {    background:url("./img/currentLocation.png") no-repeat; width: 2vw;height: 3.5vh;}*/
 
 /* 업데이트 타임 보드 */
-#update_time { float:left; width:8vw; height:8vh; position:absolute; top:10px; left:51vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; font-size: 1vw;}
+#update_time { float:left; width:8vw; height:8vh; position:absolute; top:10px; left:41vw;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center; font-size: 1vw;}
 #update_time img{
     width: 2vw;
     height: 3.5vh;
@@ -77,12 +77,6 @@ a {text-decoration: none;}
 
 
 
-
-
-
-
-
-
 /* map API */
 .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
 .wrap * {padding: 0;margin: 0;}
@@ -102,7 +96,7 @@ a {text-decoration: none;}
 
 /*login*/
 #loginForm { position:absolute; top:10px; left:92vw;border-radius: 5px;border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; text-align: center;}
-a.button {
+a.button, #logoutButton {
     display: inline-block;
     padding: 0.5vh 1vw;
     text-align: center;
@@ -110,7 +104,6 @@ a.button {
     font-size: 1.2vw;
     color : gray;
 }
-
 #loginForm:hover{
     background-color: #ffe6e6;
     margin: 1px;

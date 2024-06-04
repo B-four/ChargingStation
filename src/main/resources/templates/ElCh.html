@@ -8,57 +8,53 @@
 </head>
 <script defer src="./ElCh.js"></script>
 <body>
-    <div id = "container">
-        <ul id="category">
-            <li id="click1" data-order="0"> 
-                <span class="category_bg cafe"></span>
-                다시<br>검색
-            </li>       
-            <li id="click2" data-order="1">
-                <span class="location"></span>
-                현재<br>위치
-            </li>  
-            <li id="click3" data-order="2"> 
-                <span class="category_bg pharmacy"></span>
-                빈칸<br>우선        
-            </li>
-            <li id="click4" data-order="4"> 
-                <span class="category_bg oil"></span>
-                고속<br>우선
-            </li>
-            <li id="click5" data-order="5">
-                <span class="category_bg mart"></span>
-                거리<br>우선
-            </li>
-        </ul>
-        <div id = "update_time">새로고침<br><img src="../img/re.png"></div>
-        <div id = "bookMark">★</div>
-        <div id = "loginForm"><a href="/login" class="button">로그인</a></div>
-        <div id = "map"></div>
-        <div id = "info">
-            <div id = "charger_info">
-                <div id = "charger_name">
-                    <div id = "name">
-                        <div><a id = "name_text1">충전소 이름 OOOOO</a></div>
-                        <div><a id = "name_text2">충전소 부수정보 OOOOO</a></div>
-                    </div>
-                    <div id = "close">
-                        <div id = "close_inner">닫기</div>
-                    </div>
+<div id = "container">
+    <ul id="category">
+        <li id="click1" data-order="0">
+            <span class="location"></span>
+            현재<br>위치
+        </li>
+        <li id="click2" data-order="1">
+            <span class="category_bg pharmacy"></span>
+            빈칸<br>우선
+        </li>
+        <li id="click3" data-order="2">
+            <span class="category_bg oil"></span>
+            고속<br>우선
+        </li>
+        <li id="click4" data-order="3">
+            <span class="category_bg mart"></span>
+            거리<br>우선
+        </li>
+    </ul>
+    <div id = "update_time">새로고침<br><img src="../img/re.png"></div>
+    <div id = "bookMark">★</div>
+    <div id = "loginForm"><a href="/login" class="button">로그인</a></div>
+    <div id = "map"></div>
+    <div id = "info">
+        <div id = "charger_info">
+            <div id = "charger_name">
+                <div id = "name">
+                    <div><a id = "name_text1">충전소 이름 OOOOO</a></div>
+                    <div><a id = "name_text2">충전소 부수정보 OOOOO</a></div>
                 </div>
-                <div id = "charger_name_2">
-                    <div id = "slow">
-                        <div><img src="../img/slow.png" width="20%"><a>완속 충전기</a></div>
-                        <a><span id = "slow_using">4</span>/<span id = "slow_all">6</span> 사용중 </a>
-                    </div>
-                    <div id = "fast">
-                        <div><img src="../img/fast.png" width="20%"><a>급속 충전기</a></div>
-                        <a><span id = "fast_using">2</span>/<span id = "fast_all">6</span> 사용중 </a>
-                    </div>
+                <div id = "close">
+                    <div id = "close_inner">닫기</div>
+                </div>
+            </div>
+            <div id = "charger_name_2">
+                <div id = "slow">
+                    <div><img src="../img/slow.png" width="20%"><a>완속 충전기</a></div>
+                    <a><span id = "slow_using">4</span>/<span id = "slow_all">6</span> 사용중 </a>
+                </div>
+                <div id = "fast">
+                    <div><img src="../img/fast.png" width="20%"><a>급속 충전기</a></div>
+                    <a><span id = "fast_using">2</span>/<span id = "fast_all">6</span> 사용중 </a>
                 </div>
             </div>
         </div>
-     </div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eb4681b5ea7c0c09ec67660cefc45851"></script>
+    </div>
+</div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eb4681b5ea7c0c09ec67660cefc45851"></script>
 </body>
 </html>

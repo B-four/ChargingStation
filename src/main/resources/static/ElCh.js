@@ -668,3 +668,22 @@ function refreshMarkers() {
 document.getElementById("update_time").addEventListener("click", function (){
     refreshMarkers();
 })
+
+////////////////////////////////////////////////로그인 to 로그아웃
+document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('loggedIn') === 'true') {
+        replaceLoginWithLogout();
+    }
+});
+function handleLogout() {
+    alert("You have been logged out.");
+    localStorage.removeItem('loggedIn'); // Remove the login state
+    document.getElementById('loginForm').innerHTML = '<a href="/login" class="button">로그인</a>';
+    // Additional logout logic here (e.g., clearing tokens, session data)
+}
+
+// Function to replace login link with logout button
+function replaceLoginWithLogout() {
+    document.getElementById('loginForm').innerHTML = '<button id="logoutButton" class="button">로그아웃</button>';
+    document.getElementById('logoutButton').addEventListener('click', handleLogout);
+}

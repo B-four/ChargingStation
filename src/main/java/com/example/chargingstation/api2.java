@@ -2,6 +2,7 @@ package com.example.chargingstation;
 
 import com.example.chargingstation.XmlMapping.Item;
 import com.example.chargingstation.XmlMapping.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
@@ -45,6 +46,10 @@ public class api2 {
         rd.close();
         conn.disconnect();
         System.out.println(sb.toString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ChargerStatusResponse response = objectMapper.readValue(sb.toString(), ChargerStatusResponse.class);
+
     }
     
     public void api2read1() throws IOException
@@ -75,5 +80,10 @@ public class api2 {
         rd.close();
         conn.disconnect();
         System.out.println(sb.toString());
+
+        // JSON 데이터를 Java 객체로 매핑
+        ObjectMapper objectMapper = new ObjectMapper();
+        ChargerInfoResponse response = objectMapper.readValue(sb.toString(), ChargerInfoResponse.class);
+
     }
 }

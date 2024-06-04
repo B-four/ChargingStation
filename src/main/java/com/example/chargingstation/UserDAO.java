@@ -15,7 +15,7 @@ public class UserDAO
     
     public UserDTO getUserByUsername(String username)
     {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM user WHERE username = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{username}, (rs, rowNum) ->
                 new UserDTO(rs.getString("username"), rs.getString("password")));
     }

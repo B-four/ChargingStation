@@ -12,6 +12,9 @@ public class ChargingStationApplication {
     public static void main(String[] args) throws IOException {
         ConfigurableApplicationContext context = SpringApplication.run(ChargingStationApplication.class, args);
 
+        api2 apiInstance = new api2();
+        apiInstance.api2Read();
+        apiInstance.api2read1();
     }
 
 }

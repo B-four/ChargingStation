@@ -137,7 +137,36 @@ function fetchStations() {
                 stationID: item.stationID,
                 stationName: item.stationName,
                 latlng: new kakao.maps.LatLng(item.stationLatitude, item.stationLongitude),
-                //status_UpdateTime: item.status_UpdateTime
+                status_UpdateTime: item.status_UpdateTime
+            }));
+            // stations 배열을 사용하는 로직
+            //console.log(stations);
+
+            // stations 배열을 사용하는 로직
+            for(let i=0; i < stations.length; i++){
+                var data = stations[i];
+                displayMarker(data);
+            }
+
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function fetchStations2() {
+    fetch('/stationList')
+        .then(response => response.json())
+        .then(data => {
+            stations = data.map(item => ({
+                stationAddress: item.stationAddress,
+                chargerType: item.chargerType,
+                chargerID: item.chargerID,
+                chargerName: item.chargerName,
+                chargerStatus: item.chargerStatus,
+                chargerTerminal: item.chargerTerminal,
+                stationID: item.statId,
+                stationName: item.stationName,
+                latlng: new kakao.maps.LatLng(item.stationLatitude, item.stationLongitude),
+                status_UpdateTime: item.status_UpdateTime
             }));
             // stations 배열을 사용하는 로직
             //console.log(stations);

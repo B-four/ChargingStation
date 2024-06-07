@@ -1,7 +1,5 @@
 package com.example.chargingstation;
 
-import com.example.chargingstation.XmlMapping.Item;
-import com.example.chargingstation.XmlMapping.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class DatabaseService {
@@ -64,8 +61,8 @@ public class DatabaseService {
     @Scheduled(fixedDelay = 60000) // 60 seconds
     public void readApiUpdateDB( ) throws IOException {
         Response response = api.readApi();
-        List<Item> item = response.getBody().getItems().getItem();
-        for (Item i : item) {
+        List<Response.Body.Item> item = response.getBody().getItems().getItem();
+        for (Response.Body.Item i : item) {
             String checkSql = "SELECT COUNT(*) FROM charging_station_info WHERE charger_id = ? AND station_id = ?";
             Integer count = jdbcTemplate.queryForObject(checkSql, new Object[]{i.getChargerID(), i.getStationID()}, Integer.class);
             

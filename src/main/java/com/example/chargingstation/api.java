@@ -1,12 +1,10 @@
 package com.example.chargingstation;
 
-import com.example.chargingstation.XmlMapping.Item;
-import com.example.chargingstation.XmlMapping.Response;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,6 +22,7 @@ public class api {
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=31CcKv%2BKhtHZBXu42U3lWoa2ZKMVJb7UqwkIf3sKt14hQ31xoAuvKsFBU4XCd%2FcfudH7%2B0oDm2RD09QFkq%2Feng%3D%3D"); //*//*Service Key*//*
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); //*//*페이지번호*//*
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("5000", "UTF-8")); //*//*한 페이지 결과 수*//*
+        //urlBuilder.append("&"+URLEncoder.encode("dataType")+"="+URLEncoder.encode("JSON","UTF-8")); /*JSON 타입으로 호출할 경우 추가*/
 
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

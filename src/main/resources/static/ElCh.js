@@ -135,7 +135,7 @@ function fetchStations() {
                 stationID: item.stationID,
                 stationName: item.stationName,
                 latlng: new kakao.maps.LatLng(item.stationLatitude, item.stationLongitude),
-                status_UpdateTime: item.status_UpdateTime
+                //status_UpdateTime: item.status_UpdateTime
             }));
             // stations 배열을 사용하는 로직
             //console.log(stations);

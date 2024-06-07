@@ -2,9 +2,7 @@
 // custom Func
 
 // 임시
-document.getElementById("click1").addEventListener("click", function(){
-    InfoShowOn();
-},false)
+
 
 // 충전소 정보 업데이트
 function UpdateInfo(stationID){
@@ -181,7 +179,7 @@ function fetchStations2() {
         .catch(error => console.error('Error:', error));
 }
 
-
+var displayMarKerOverlays = [];
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(data) {
     var imageSrc=changeMarkerColor(data.stationID);
@@ -244,9 +242,13 @@ function displayMarker(data) {
     container.append(stationID);
 
     kakao.maps.event.addListener(marker, 'click', function() {
+        setNullOverlays();
+        setNullDisplatMarkerOverlays();
         overlay.setMap(map);
         InfoShowOn(event.target.id);
     });
+
+    displayMarKerOverlays.push(overlay);
 }
 //
 //==================================================
@@ -293,7 +295,15 @@ function removeOverlays() {
     overlays = [];
 }
 
+function setNullDisplatMarkerOverlays() {
+    displayMarKerOverlays.forEach(overlay => overlay.setMap(null));
+}
+function setNullOverlays() {
+    overlays.forEach(overlay => overlay.setMap(null));
+}
+
 click1.addEventListener("click", function(){
+    setNullDisplatMarkerOverlays();
     removeMarkers();
     removeOverlays();
     removeCurrentMarker();
@@ -313,6 +323,8 @@ click1.addEventListener("click", function(){
 }, false);
 
 click2.addEventListener("click", function(){
+    setNullDisplatMarkerOverlays();
+    setNullOverlays();
     removeMarkers();
     removeOverlays();
     const aa = calLengthByDistance();
@@ -320,12 +332,16 @@ click2.addEventListener("click", function(){
 }, false);
 
 click3.addEventListener("click", function(){
+    setNullDisplatMarkerOverlays();
+    setNullOverlays();
     removeMarkers();
     removeOverlays();
     calLengthByAvailability();
 }, false);
 
 click4.addEventListener("click", function(){
+    setNullDisplatMarkerOverlays();
+    setNullOverlays();
     removeMarkers();
     removeOverlays();
     calLengthByFastCharger();
@@ -410,6 +426,8 @@ function infoDisplayMarker(data, index) {
     container.append(stationID);
 
     kakao.maps.event.addListener(marker, 'click', function() {
+        setNullDisplatMarkerOverlays();
+        setNullOverlays();
         overlay.setMap(map);
     });
 
@@ -534,6 +552,10 @@ function infoInPointMarker(position, message) {
         position: position,
         xAnchor: 0.5,
         yAnchor: 1.5
+    });
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+        overlay.setMap(map);
     });
 
     marker.setMap(map);
@@ -695,9 +717,27 @@ function refreshMarkers() {
 }
 
 document.getElementById("update_time").addEventListener("click", function (){
+    setNullDisplatMarkerOverlays();
+    removeMarkers();
+    removeOverlays();
     refreshMarkers();
 })
 
+//즐겨찾기
+document.getElementById("bookmarkButton").addEventListener("click", function(event){
+    bookMarkOn(event.target.id);
+    bookMarkOff(event.target.id);
+},false)
+//해당 충전소를 즐겨찾기에 등록합니다.
+function bookMarkOn(stationID){
+    //별표 업데이트
+    //즐겨찾기 리스트에 StationID 등록
+}
+//해당 충전소를 즐겨찾기에서 삭제합니다.
+function bookMarkOff(stationID) {
+    //별표 업데이트
+    //즐겨찾기 리스트에서 StationID 삭제
+}
 ////////////////////////////////////////////////로그인 to 로그아웃
 document.addEventListener('DOMContentLoaded', function() {
     if (localStorage.getItem('loggedIn') === 'true') {

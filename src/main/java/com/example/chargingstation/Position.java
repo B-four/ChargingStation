@@ -2,8 +2,6 @@ package com.example.chargingstation;
 
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 public class Position {
     private String name;

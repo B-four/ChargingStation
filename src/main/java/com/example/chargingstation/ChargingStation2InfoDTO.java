@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 public class ChargingStation2InfoDTO
 {
     private String stationName;
-    private int stationID; // 충전소 ID
-    private int chargerID; // 충전기 ID
-    private int chargerType; // 충전기 타입
+    private String stationID; // 충전소 ID
+    private String chargerID; // 충전기 ID
+    private String chargerType; // 충전기 타입
     private String stationAddress; // 충전소 주소
     private String location; // 상세위치
     private double stationLatitude; // 위도
@@ -17,12 +17,12 @@ public class ChargingStation2InfoDTO
     private String bNm; // 기관명
     private String busiName; // 운영기관명
     private String busiCall; // 운영기관 연락처
-    private int chargerStatus; // 충전기 상태
-    private LocalDateTime status_UpdateTime; // 충전기 상태 갱신 시각
-    private LocalDateTime lastTsdt; // 마지막 충전 시작일시
-    private LocalDateTime lastTedt; // 마지막 충전 종료일시
-    private LocalDateTime nowTsdt; // 충전중 시작일시
-    private int output; // 출전용량
+    private String chargerStatus; // 충전기 상태
+    private String status_UpdateTime; // 충전기 상태 갱신 시각
+    private String lastTsdt; // 마지막 충전 시작일시
+    private String lastTedt; // 마지막 충전 종료일시
+    private String nowTsdt; // 충전중 시작일시
+    private String output; // 출전용량
     private String method; // 충전 방식
     private int zcode; // 지역코드
     private int zscode; // 지역구분 상세코드

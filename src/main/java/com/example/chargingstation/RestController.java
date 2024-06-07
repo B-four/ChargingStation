@@ -1,6 +1,5 @@
 package com.example.chargingstation;
 
-import com.example.chargingstation.XmlMapping.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;

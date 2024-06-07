@@ -41,4 +41,9 @@ public class RestController {
         stations = databaseService.fetchAllData();
         return stations;
     }
+
+    @GetMapping("/stationList2")
+    public List<ChargerInfoItem> getStations2() throws IOException {
+        return databaseService.fetchAllChargerInfo();
+    }
 }

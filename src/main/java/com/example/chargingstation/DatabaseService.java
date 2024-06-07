@@ -11,14 +11,15 @@ import java.util.List;
 @Component
 public class DatabaseService {
     private final JdbcTemplate jdbcTemplate;
-
+    private final ChargerInfoItemRepository chargerInfoItemRepository;
     @Autowired
-    public DatabaseService(JdbcTemplate jdbcTemplate, api apiInstance) {
+    public DatabaseService(JdbcTemplate jdbcTemplate, api apiInstance, ChargerInfoItemRepository chargerInfoItemRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.chargerInfoItemRepository = chargerInfoItemRepository;
     }
 
     public List<ChargingStationInfoDTO> fetchAllData() {
-        return jdbcTemplate.query("SELECT * FROM charging_station_info ORDER BY station_id ASC", (rs, rowNum) -> {
+        return jdbcTemplate.query("SELECT * FROM elec_charging_station_info ORDER BY station_id ASC", (rs, rowNum) -> {
             ChargingStationInfoDTO chargingStationInfoDTO = new ChargingStationInfoDTO();
             chargingStationInfoDTO.setStationAddress(rs.getString("address"));
             chargingStationInfoDTO.setChargerType(rs.getInt("charger_type"));
@@ -38,7 +39,7 @@ public class DatabaseService {
     public List<ChargingStationInfoDTO> fetchNearbyData(double latitude, double longitude) {
         double range = 0.005; // You can adjust this value
         return jdbcTemplate.query(
-                "SELECT * FROM charging_station_info WHERE lat BETWEEN ? AND ? AND longi BETWEEN ? AND ?",
+                "SELECT * FROM elec_charging_station_info WHERE lat BETWEEN ? AND ? AND longi BETWEEN ? AND ?",
                 new Object[]{latitude - range, latitude + range, longitude - range, longitude + range},
                 (rs, rowNum) -> {
                     ChargingStationInfoDTO chargingStationInfoDTO = new ChargingStationInfoDTO();
@@ -63,18 +64,22 @@ public class DatabaseService {
         Response response = api.readApi();
         List<Response.Body.Item> item = response.getBody().getItems().getItem();
         for (Response.Body.Item i : item) {
-            String checkSql = "SELECT COUNT(*) FROM charging_station_info WHERE charger_id = ? AND station_id = ?";
+            String checkSql = "SELECT COUNT(*) FROM elec_charging_station_info WHERE charger_id = ? AND station_id = ?";
             Integer count = jdbcTemplate.queryForObject(checkSql, new Object[]{i.getChargerID(), i.getStationID()}, Integer.class);
             
             if (count != null && count > 0) {
                 // If the data already exists, update it
-                String updateSql = "UPDATE charging_station_info SET address = ?, charger_type = ?, charger_name = ?, charger_status = ?, charger_terminal = ?, station_name = ?, lat = ?, longi = ?, status_updatetime = ? WHERE charger_id = ? AND station_id = ?";
+                String updateSql = "UPDATE elec_charging_station_info SET address = ?, charger_type = ?, charger_name = ?, charger_status = ?, charger_terminal = ?, station_name = ?, lat = ?, longi = ?, status_updatetime = ? WHERE charger_id = ? AND station_id = ?";
                 jdbcTemplate.update(updateSql, i.getStationAddress(), i.getChargerType(), i.getChargerName(), i.getChargerStatus(), i.getChargerTerminal(), i.getStationName(), i.getStationLatitude(), i.getStationLongitude(), i.getStatus_UpdateTime(), i.getChargerID(), i.getStationID());
             } else {
                 // If the data does not exist, insert it
-                String insertSql = "INSERT INTO charging_station_info (address, charger_type, charger_id, charger_name, charger_status, charger_terminal, station_id, station_name, lat, longi, status_updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String insertSql = "INSERT INTO elec_charging_station_info (address, charger_type, charger_id, charger_name, charger_status, charger_terminal, station_id, station_name, lat, longi, status_updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 jdbcTemplate.update(insertSql, i.getStationAddress(), i.getChargerType(), i.getChargerID(), i.getChargerName(), i.getChargerStatus(), i.getChargerTerminal(), i.getStationID(), i.getStationName(), i.getStationLatitude(), i.getStationLongitude(), i.getStatus_UpdateTime());
             }
         }
+    }
+
+    public List<ChargerInfoItem> fetchAllChargerInfo() {
+        return chargerInfoItemRepository.findAll();
     }
 }

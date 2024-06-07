@@ -24,7 +24,7 @@ class ChargerInfoItems {
 @Getter
 @Setter
 @Entity
-@Table(name = "charger_info_2")
+@Table(name = "env_charging_station_info")
 @IdClass(ChargerInfoItemKey.class)
 class ChargerInfoItem {
     @Id

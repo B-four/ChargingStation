@@ -1,6 +1,8 @@
 package com.example.chargingstation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -79,7 +81,7 @@ public class DatabaseService {
         }
     }
 
-    public List<ChargerInfoItem> fetchAllChargerInfo() {
-        return chargerInfoItemRepository.findAll();
+    public Page<ChargerInfoItem> fetchAllChargerInfo(int page, int size) {
+        return chargerInfoItemRepository.findAll(PageRequest.of(page, size));
     }
 }

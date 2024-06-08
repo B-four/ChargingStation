@@ -2,12 +2,14 @@ package com.example.chargingstation;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @org.springframework.web.bind.annotation.RestController
+@RequestMapping("/api/chargers")
 public class RestController {
     private final DatabaseService databaseService;
     private final api apiInstance;
@@ -47,5 +49,12 @@ public class RestController {
     @GetMapping("/stationList2")
     public Page<ChargerInfoItem> getStations2(@RequestParam int page, @RequestParam int size) throws IOException {
         return databaseService.fetchAllChargerInfo(page, size);
+    }
+
+    @GetMapping("/nearbyList")
+    public List<ChargerInfoItem> getNearbyStations(@RequestParam double latitude, @RequestParam double longitude) {
+        // 가까운 충전소를 찾는 쿼리를 데이터베이스에서 실행합니다.
+        List<ChargerInfoItem> nearbyStations = databaseService.findNearbyStations(latitude, longitude);
+        return nearbyStations;
     }
 }

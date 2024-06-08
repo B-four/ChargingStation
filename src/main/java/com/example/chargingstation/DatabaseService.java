@@ -84,4 +84,8 @@ public class DatabaseService {
     public Page<ChargerInfoItem> fetchAllChargerInfo(int page, int size) {
         return chargerInfoItemRepository.findAll(PageRequest.of(page, size));
     }
+
+    public List<ChargerInfoItem> findNearbyStations(double latitude, double longitude) {
+        return chargerInfoItemRepository.findNearbyStations(latitude, longitude);
+    }
 }

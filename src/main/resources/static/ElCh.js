@@ -109,7 +109,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
     // 마커와 인포윈도우를 표시합니다
     infoInPointMarker(locPosition, message);
-
+    fetchNearbyStations(lat, lon);
     // 지도 중심좌표를 접속위치로 변경합니다
     map.setCenter(locPosition);
 
@@ -118,8 +118,10 @@ navigator.geolocation.getCurrentPosition(function(position) {
 var stations = []; //정보 배열
 
 window.onload = function () {
-    fetchStations2();
+
 }
+
+
 
 function fetchStations() {
     fetch('/stationList')
@@ -150,69 +152,32 @@ function fetchStations() {
         .catch(error => console.error('Error:', error));
 }
 
-async function fetchAllStations() {
-    let allStations = [];
-    let page = 0;
-    const size = 10000; // 한 번에 가져올 데이터 개수
-
-    while (true) {
-        const response = await fetch(`/stationList2?page=${page}&size=${size}`);
-        const data = await response.json();
-
-        if (data.content.length === 0) {
-            break; // 더 이상 가져올 데이터가 없으면 종료
+function fetchNearbyStations(lat, lon) {
+    fetch(`/api/chargers/nearbyList?latitude=${lat}&longitude=${lon}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
         }
-
-        const stations = data.content.map(item => ({
-            stationAddress: item.statId,
-            chargerType: item.chgerType,
-            chargerID: item.chgerId,
-            stationID: item.statId,
-            stationName: item.statNm,
-            latlng: new kakao.maps.LatLng(item.lat, item.lng),
-        }));
-
-        allStations = allStations.concat(stations);
-
-        page++; // 다음 페이지로 이동
-    }
-
-    return allStations;
-}
-
-async function loadAndDisplayStations() {
-    try {
-        const allStations = await fetchAllStations();
-        const batchSize = 10000; // 한 번에 표시할 마커의 수
-        let startIndex = 0;
-
-        // 마커를 일정한 간격으로 표시하는 함수
-        function displayMarkersBatch() {
-            const endIndex = Math.min(startIndex + batchSize, allStations.length);
-
-            for (let i = startIndex; i < endIndex; i++) {
-                const data = allStations[i];
-                console.log(data);
+    })
+        .then(response => response.json())
+        .then(data => {
+            stations = data.map(item => ({
+                stationAddress: item.addr,
+                chargerType: item.chgerType,
+                chargerID: item.chgerId,
+                stationID: item.statId,
+                stationName: item.statNm,
+                latlng: new kakao.maps.LatLng(item.lat, item.lng),
+                chargerStatus: item.stat,
+            }));
+            // stations 배열을 사용하는 로직
+            for (let i = 0; i < stations.length; i++) {
+                var data = stations[i];
                 displayMarker(data);
             }
-
-            startIndex = endIndex;
-
-            if (startIndex < allStations.length) {
-                // 일정 시간 후 다음 배치를 표시
-                setTimeout(displayMarkersBatch, 100); // 200ms 후에 다음 배치 표시
-            }
-        }
-
-        // 처음 배치를 표시
-        displayMarkersBatch();
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
+        })
+        .catch(error => console.error('Error:', error));
 }
-// 호출하여 데이터 로드 및 표시
-loadAndDisplayStations();
 
 var displayMarKerOverlays = [];
 // 지도에 마커를 표시하는 함수입니다

@@ -109,10 +109,18 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
     // 마커와 인포윈도우를 표시합니다
     infoInPointMarker(locPosition, message);
-    fetchNearbyStations(lat, lon);
+    //fetchNearbyStations(lat, lon);
     // 지도 중심좌표를 접속위치로 변경합니다
     map.setCenter(locPosition);
 
+});
+
+kakao.maps.event.addListener(map, 'idle', function() {
+    // 지도의 현재 중심 좌표를 가져옵니다
+    var center = map.getCenter();
+    var message = '지도 중심 좌표는 위도 ' + center.getLat() + ' 경도 ' + center.getLng() + ' 입니다';
+    fetchNearbyStations(center.getLat(), center.getLng());
+    document.getElementById('centerCoords').innerText = message;
 });
 
 var stations = []; //정보 배열
@@ -120,8 +128,6 @@ var stations = []; //정보 배열
 window.onload = function () {
 
 }
-
-
 
 function fetchStations() {
     fetch('/stationList')

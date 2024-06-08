@@ -10,9 +10,9 @@ public interface ChargerInfoItemRepository extends JpaRepository<ChargerInfoItem
     @Query(value = "SELECT *, " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(lat)) * cos(radians(lng) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(lat)))) AS distance " +
             "FROM env_charging_station_info " +
-            "HAVING distance < 10 " +  // 예시: 10km 내의 충전소만 선택
+            "HAVING distance < 5 " +  // 예시: 10km 내의 충전소만 선택
             "ORDER BY distance " +
-            "LIMIT 10000", nativeQuery = true)
+            "LIMIT 1000", nativeQuery = true)
     List<ChargerInfoItem> findNearbyStations(@Param("latitude") double latitude, @Param("longitude") double longitude);
     ChargerInfoItem findByStatId(String statId);
 }

@@ -1,7 +1,5 @@
 package com.example.chargingstation.stationcontrol.repository;
 
-//import com.example.chargingstation.station.entity.Station;
-//import com.example.chargingstation.station.entity.StationKey;
 import com.example.chargingstation.stationcontrol.entity.Station;
 import com.example.chargingstation.stationcontrol.entity.StationKey;
 import org.springframework.data.jpa.repository.JpaRepository;

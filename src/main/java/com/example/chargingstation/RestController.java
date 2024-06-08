@@ -1,6 +1,8 @@
 package com.example.chargingstation;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class RestController {
     }
 
     @GetMapping("/stationList2")
-    public List<ChargerInfoItem> getStations2() throws IOException {
-        return databaseService.fetchAllChargerInfo();
+    public Page<ChargerInfoItem> getStations2(@RequestParam int page, @RequestParam int size) throws IOException {
+        return databaseService.fetchAllChargerInfo(page, size);
     }
 }

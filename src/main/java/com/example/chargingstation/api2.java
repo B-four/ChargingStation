@@ -55,9 +55,16 @@ public class api2 {
         List<ChargerInfoItem> items = response.getItems().getItem();
 
         // 아이템이 stationID와 chgerID가 제대로 설정되었는지 확인
-        for (ChargerInfoItem item : items) {
+        /*for (ChargerInfoItem item : items) {
             if (item.getStatId() == null || item.getChgerId() == null) {
                 System.out.println("Null ID found for item: " + item);
+            }
+        }*/
+        for (ChargerInfoItem item : items) {
+            ChargerInfoItem existingItem = chargerInfoItemRepository.findByStatId(item.getStatId());
+            
+            if (existingItem == null || !existingItem.getStatUpdDt().equals(item.getStatUpdDt())) {
+                chargerInfoItemRepository.save(item);
             }
         }
     }

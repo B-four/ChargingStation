@@ -98,6 +98,8 @@ var mapContainer = document.getElementById('map'), // 지도의 중심좌표
 
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
+
+
 /////////////////////////////////////////////////////현재위치
 navigator.geolocation.getCurrentPosition(function(position) {
 
@@ -114,13 +116,22 @@ navigator.geolocation.getCurrentPosition(function(position) {
     map.setCenter(locPosition);
 
 });
+var debounceTimer;
+function debounce(func, delay) {
+    return function(...args) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+kakao.maps.event.addListener(map, 'idle', debounce(function() {
+    // 지도의 현재 중심 좌표를 가져옵니다
+    var center = map.getCenter();
+    var message = '지도 중심 좌표는 위도 ' + center.getLat() + ' 경도 ' + center.getLng() + ' 입니다';
+    fetchNearbyStations(center.getLat(), center.getLng());
+    document.getElementById('centerCoords').innerText = message;
+}, 1000));
 
 var stations = []; //정보 배열
-
-window.onload = function () {
-
-}
-
 
 
 function fetchStations() {
@@ -161,6 +172,8 @@ function fetchNearbyStations(lat, lon) {
     })
         .then(response => response.json())
         .then(data => {
+            removeMarkers();
+
             stations = data.map(item => ({
                 stationAddress: item.addr,
                 chargerType: item.chgerType,

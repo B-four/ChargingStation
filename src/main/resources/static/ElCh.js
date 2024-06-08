@@ -118,8 +118,10 @@ navigator.geolocation.getCurrentPosition(function(position) {
 var stations = []; //정보 배열
 
 window.onload = function () {
-    fetchNearbyStations();
+
 }
+
+
 
 function fetchStations() {
     fetch('/stationList')
@@ -166,6 +168,7 @@ function fetchNearbyStations(lat, lon) {
                 stationID: item.statId,
                 stationName: item.statNm,
                 latlng: new kakao.maps.LatLng(item.lat, item.lng),
+                chargerStatus: item.stat,
             }));
             // stations 배열을 사용하는 로직
             for (let i = 0; i < stations.length; i++) {

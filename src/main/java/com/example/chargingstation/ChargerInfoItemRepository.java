@@ -14,5 +14,5 @@ public interface ChargerInfoItemRepository extends JpaRepository<ChargerInfoItem
             "ORDER BY distance " +
             "LIMIT 10000", nativeQuery = true)
     List<ChargerInfoItem> findNearbyStations(@Param("latitude") double latitude, @Param("longitude") double longitude);
-
+    ChargerInfoItem findByStatId(String statId);
 }

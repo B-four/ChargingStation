@@ -690,14 +690,14 @@ function removeDuplicateStationsByAvailability() {
     const stationMap = new Map();
 
     stations.forEach(station => {
-        if (!stationMap.has(station.stationAddress)) {
-            stationMap.set(station.stationAddress, {
+        if (!stationMap.has(station.stationID)) {
+            stationMap.set(station.stationID, {
                 ...station,
-                availableChargers: station.chargerStatus === 2 ? 1 : 0
+                availableChargers: station.chargerStatus !=3 ? 1 : 0
             });
         } else {
-            const existingStation = stationMap.get(station.stationAddress);
-            existingStation.availableChargers += station.chargerStatus === 2 ? 1 : 0;
+            const existingStation = stationMap.get(station.stationID);
+            existingStation.availableChargers += station.chargerStatus !=3 ? 1 : 0;
         }
     });
 
@@ -710,14 +710,14 @@ function removeDuplicateStationsByFastCharger() {
 
     stations.forEach(station => {
         if (station.chargerType === 2) {
-            if (!stationMap.has(station.stationAddress)) {
-                stationMap.set(station.stationAddress, {
+            if (!stationMap.has(station.stationID)) {
+                stationMap.set(station.stationID, {
                     ...station,
-                    availableChargers: station.chargerStatus === 2 ? 1 : 0
+                    availableChargers: station.chargerStatus !=3 ? 1 : 0
                 });
             } else {
-                const existingStation = stationMap.get(station.stationAddress);
-                existingStation.availableChargers += station.chargerStatus === 2 ? 1 : 0;
+                const existingStation = stationMap.get(station.stationID);
+                existingStation.availableChargers += station.chargerStatus !=3 ? 1 : 0;
             }
         }
     });

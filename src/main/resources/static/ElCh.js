@@ -165,7 +165,7 @@ function fetchStations() {
         })
         .catch(error => console.error('Error:', error));
 }
-
+//
 //이주형
 function removeNearByInfo() {
     console.log("제거 실행")

@@ -21,6 +21,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             if (text === "Login successful") {
                 alert("Login successful");
                 localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('username', username);
+                console.log(localStorage.getItem('loggedIn'));
                 window.location.href = '/';
             } else {
                 errorMessage.textContent = '아이디나 비밀번호가 잘못되었습니다.';

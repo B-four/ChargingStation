@@ -217,7 +217,7 @@ function displayMarker(data) {
         image : markerImage // 마커 이미지
     });
     var overlay = new kakao.maps.CustomOverlay({
-        yAnchor: 3,
+        yAnchor: 1.2,
         position: marker.getPosition()
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////list에 추가
@@ -244,7 +244,7 @@ function displayMarker(data) {
 
     var container = document.createElement('div');
     container.id = data.stationID;
-    container.style.cssText = 'background: white; border: 1px solid black ; position : relative ; top : 350px ;';
+    container.style.cssText = 'background: white; border: 1px solid black ;';
     resetCounters();
     slowFast(UpdateInfo(data.stationID));
     var content = document.createElement('div');
@@ -440,12 +440,12 @@ function infoDisplayMarker(data, index) {
         image : markerImage // 마커 이미지
     });
     var overlay = new kakao.maps.CustomOverlay({
-        yAnchor: 3,
+        yAnchor: 1.2,
         position: marker.getPosition()
     });
     var container = document.createElement('div');
     container.id = data.stationID;
-    container.style.cssText = 'background: white; border: 1px solid black ; position : relative ; top : 150px ;';
+    container.style.cssText = 'background: white; border: 1px solid black ;';
     resetCounters();
     slowFast(UpdateInfo(data.stationID));
     var content = document.createElement('div');
@@ -627,7 +627,7 @@ function infoInPointMarker(position, message) {
         content: message,
         position: position,
         xAnchor: 0.5,
-        yAnchor: 1.5
+        yAnchor: 1.2
     });
 
     kakao.maps.event.addListener(marker, 'click', function() {

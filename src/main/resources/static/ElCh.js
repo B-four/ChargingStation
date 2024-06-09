@@ -117,6 +117,7 @@ function debounce(func, delay) {
         debounceTimer = setTimeout(() => func.apply(this, args), delay);
     };
 }
+
 kakao.maps.event.addListener(map, 'idle', debounce(function() {
     // 지도의 현재 중심 좌표를 가져옵니다
     var center = map.getCenter();
@@ -128,7 +129,7 @@ kakao.maps.event.addListener(map, 'idle', debounce(function() {
 var stations = []; //정보 배열
 
 window.onload = function () {
-    fetchStations();
+    //fetchStations();
     if (localStorage.getItem('loggedIn') === 'true') {
         replaceLoginWithLogout();
     }
@@ -165,7 +166,21 @@ function fetchStations() {
         .catch(error => console.error('Error:', error));
 }
 
+//이주형
+function removeNearByInfo() {
+    console.log("제거 실행")
+    nearByMarkers.forEach(marker => marker.setMap(null));
+    nearByOverlays.forEach(overlay => overlay.setMap(null));
+    nearByMarkers = [];
+    nearByOverlays = [];
+}
+//이주형
+    var nearByMarkers = [];
+    var nearByOverlays = [];
+
 function fetchNearbyStations(lat, lon) {
+    console.log("니어바이 실행")
+    removeNearByInfo();//이주형
     fetch(`/api/chargers/nearbyList?latitude=${lat}&longitude=${lon}`, {
         method: 'GET',
         headers: {
@@ -278,7 +293,7 @@ function displayMarker(data) {
     bookMark.onclick = function (event) {
         if ( bookMarkList.includes(event.target.id) ){
             bookMark.innerHTML = '☆';
-            bookMarkList.pop(event.target.id);
+            bookMarkList = bookMarkList.filter(id => id !== event.target.id);
             removeList(data.stationID+"li");
         }else {
             bookMark.innerHTML = '★';
@@ -308,6 +323,10 @@ function displayMarker(data) {
         setNullDisplatMarkerOverlays();
         overlay.setMap(map);
     });
+
+    //이주형
+    nearByMarkers.push(marker);
+    nearByOverlays.push(overlay);
 
     displayMarKerOverlays.push(overlay);
 }

@@ -174,25 +174,15 @@ function removeNearByInfo() {
     nearByMarkers = [];
     nearByOverlays = [];
 }
-//이주형
-    var nearByMarkers = [];
-    var nearByOverlays = [];
 
 //이주형
-function removeNearByInfo() {
-    console.log("제거 실행")
-    nearByMarkers.forEach(marker => marker.setMap(null));
-    nearByOverlays.forEach(overlay => overlay.setMap(null));
-    nearByMarkers = [];
-    nearByOverlays = [];
-}
-//이주형
     var nearByMarkers = [];
     var nearByOverlays = [];
+    var nearByStations = [];
 
 function fetchNearbyStations(lat, lon) {
     console.log("니어바이 실행")
-    removeNearByInfo();//이주형
+    //removeNearByInfo();//이주형
     fetch(`/api/chargers/nearbyList?latitude=${lat}&longitude=${lon}`, {
         method: 'GET',
         headers: {
@@ -215,11 +205,18 @@ function fetchNearbyStations(lat, lon) {
                     stationID: item.statId,
                     stationName: item.statNm,
                     latlng: new kakao.maps.LatLng(item.lat, item.lng),
-                    chargerStatus: item.stat, //얘가 이상함지금
+                    chargerStatus: item.stat,
                 };
             });
+            //이주형
+            //stations배열의 stationID와 nearByStations의 stationID를 비교하여 중복되지않은 것만 stations배열에 다시 저장하는 기능
+            stations = stations.filter(station =>
+                            !nearByStations.some(nearby => nearby.stationID === station.stationID)
+                        );
+
             // stations 배열을 사용하는 로직
             for (let i = 0; i < stations.length; i++) {
+                nearByStations.push(stations[i]);
                 var data = stations[i];
                 displayMarker(data);
             }

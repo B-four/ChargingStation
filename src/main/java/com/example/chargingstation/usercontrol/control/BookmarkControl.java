@@ -51,23 +51,10 @@ public class BookmarkControl {
     public ResponseEntity<?> getBookmarksByUser(@RequestParam String username) {
         try {
             String userId = String.valueOf(userService.findByUsername(username).getUser_id());
-            List<Bookmark> bookmarks = bookmarkService.getBookmarksByUser(userId);
-            List<Station> bookmarkList = bookmarks.stream()
-                    .map(Bookmark::getStation)
-                    .collect(Collectors.toList());
+            List<Station> bookmarkList = bookmarkService.getStationsByUser(userId);
             return ResponseEntity.ok(bookmarkList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to get bookmarks");
         }
     }
-    
-    /*@GetMapping("/getBookmarksByUser")
-    public ResponseEntity<?> getBookmarksByUser(@RequestParam String username) {
-        try {
-            List<Station> bookmarkList = bookmarkService.getStationsByUser(username);
-            return ResponseEntity.ok(bookmarkList);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }*/
 }

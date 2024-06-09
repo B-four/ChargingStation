@@ -34,17 +34,14 @@ public class BookmarkService
                 throw new Exception("Bookmark already exists");
             }
         }
-        
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Station station = stationRepository.findByStatId(stationId);
         if (station == null) {
             throw new IllegalArgumentException("Station not found");
         }
-        
         Bookmark newBookmark = new Bookmark();
         newBookmark.setUser(user);
         newBookmark.setStation(station);
-        
         bookmarkRepository.save(newBookmark);
     }
     
@@ -60,7 +57,6 @@ public class BookmarkService
         if (bookmarkToDelete == null) {
             throw new Exception("Bookmark does not exist");
         }
-        
         bookmarkRepository.delete(bookmarkToDelete);
     }
     
@@ -74,19 +70,10 @@ public class BookmarkService
         return bookmarks;
     }
     
-    /*public List<Bookmark> getBookmarksByUser(String username) {
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-        
-        return bookmarkRepository.findByUser(user);
-    }
-    
-    public List<Station> getStationsByUser(String username) {
-        List<Bookmark> bookmarks = getBookmarksByUser(username);
+    public List<Station> getStationsByUser(String userId) {
+        List<Bookmark> bookmarks = getBookmarksByUser(userId);
         return bookmarks.stream()
                 .map(Bookmark::getStation)
                 .collect(Collectors.toList());
-    }*/
+    }
 }

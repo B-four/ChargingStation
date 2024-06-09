@@ -9,6 +9,8 @@ import com.example.chargingstation.usercontrol.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BookmarkService
 {
@@ -44,9 +46,13 @@ public class BookmarkService
             throw new IllegalArgumentException("Station not found");
         }
         
-        Bookmark bookmark = bookmarkRepository.findByUserAndStation(user, station)
-                .orElseThrow(() -> new IllegalArgumentException("Bookmark not found"));
+        Bookmark bookmark = bookmarkRepository.findByUserAndStation(user, station).orElseThrow(() -> new IllegalArgumentException("Bookmark not found"));
         
         bookmarkRepository.delete(bookmark);
+    }
+    
+    public List<Bookmark> getBookmarksByUser(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return bookmarkRepository.findByUser(user);
     }
 }

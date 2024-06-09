@@ -10,4 +10,8 @@ public class ChargingStationController
     public String getStations() {
         return "/ElCh";
     }
+    @GetMapping("/login")
+    public String getLogin() {
+        return "/login";
+    }
 }

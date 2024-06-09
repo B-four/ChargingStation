@@ -1,8 +1,10 @@
 //==================================================
 // custom Func
 
-// 임시
+//// 즐겨찾기
+let bookMarkList = [];
 
+//// [TODO]bookMarkList 를 DB에서 받아온걸로 업데이트
 
 // 충전소 정보 업데이트
 function UpdateInfo(stationID){
@@ -31,12 +33,12 @@ function slowFast(data) {
     data.forEach(function(item) {
         if (item.chargerType == 1) {
             slow_all_num++;
-            if (item.chargerStatus != 1) {
+            if (item.chargerStatus != 2) {
                 slow_using_num++;
             }
         } else if (item.chargerType == 2) {
             fast_all_num++;
-            if (item.chargerStatus != 1) {
+            if (item.chargerStatus != 2) {
                 fast_using_num++;
             }
         }
@@ -62,27 +64,19 @@ function changeMarkerColor(stationID) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////오른쪽 팝업에 충전소별 사용현황 정보 전달
 // 충전소 정보 인터페이스 스윕
-function InfoShowOn(stationID) {
-    let data = UpdateInfo(stationID);
-    document.getElementById("name_text1").innerHTML = data[0].stationName;
-    document.getElementById("name_text2").innerHTML = data[0].stationAddress;
-    resetCounters();
-    slowFast(data);
-    document.getElementById("slow_using").innerHTML = slow_using_num;
-    document.getElementById("slow_all").innerHTML = slow_all_num;
-    document.getElementById("fast_using").innerHTML = fast_using_num;
-    document.getElementById("fast_all").innerHTML = fast_all_num;
-    document.getElementById("info").style.width = "38vw";
+function InfoShowOn() {
+
+    document.getElementById("info").style.display = "block";
     // document.getElementById("info").style.border = "0.5vw solid blueviolet";
-    document.getElementById("map").style.width = "62vw";
+    // document.getElementById("map").style.width = "80vw";
 }
 function InfoShowOff(){
-    document.getElementById("info").style.width = "0vw";
+    document.getElementById("info").style.display = "none";
     // document.getElementById("info").style.border = "";
-    document.getElementById("map").style.width = "100vw";
+    // document.getElementById("map").style.width = "100vw";
 }
 // 충전소 정보 인터페이스 닫기 이벤트
-document.getElementById("close").addEventListener("click", function(){
+document.getElementById("info_close").addEventListener("click", function(){
     InfoShowOff();
 
 },false)
@@ -133,6 +127,14 @@ kakao.maps.event.addListener(map, 'idle', debounce(function() {
 
 var stations = []; //정보 배열
 
+window.onload = function () {
+    fetchStations();
+    if (localStorage.getItem('loggedIn') === 'true') {
+        replaceLoginWithLogout();
+    }
+}
+
+
 
 function fetchStations() {
     fetch('/stationList')
@@ -141,12 +143,12 @@ function fetchStations() {
             stations = data.map(item => ({
                 stationAddress: item.stationAddress,
                 chargerType: item.chargerType,
-                chargerID: item.chgerId,
+                chargerID: item.chargerID,
                 chargerName: item.chargerName,
                 chargerStatus: item.chargerStatus,
                 chargerTerminal: item.chargerTerminal,
-                stationID: item.statId,
-                stationName: item.statNm,
+                stationID: item.stationID,
+                stationName: item.stationName,
                 latlng: new kakao.maps.LatLng(item.stationLatitude, item.stationLongitude),
                 status_UpdateTime: item.status_UpdateTime
             }));
@@ -172,17 +174,23 @@ function fetchNearbyStations(lat, lon) {
     })
         .then(response => response.json())
         .then(data => {
-            removeMarkers();
-
-            stations = data.map(item => ({
-                stationAddress: item.addr,
-                chargerType: item.chgerType,
-                chargerID: item.chgerId,
-                stationID: item.statId,
-                stationName: item.statNm,
-                latlng: new kakao.maps.LatLng(item.lat, item.lng),
-                chargerStatus: item.stat,
-            }));
+            stations = data.map(item => {
+                let chargerType;
+                if (item.output > 50) {
+                    chargerType = 2;
+                } else {
+                    chargerType = 1;
+                }
+                return {
+                    stationAddress: item.addr,
+                    chargerType: chargerType,
+                    chargerID: item.chgerId,
+                    stationID: item.statId,
+                    stationName: item.statNm,
+                    latlng: new kakao.maps.LatLng(item.lat, item.lng),
+                    chargerStatus: item.stat, //얘가 이상함지금
+                };
+            });
             // stations 배열을 사용하는 로직
             for (let i = 0; i < stations.length; i++) {
                 var data = stations[i];
@@ -191,6 +199,8 @@ function fetchNearbyStations(lat, lon) {
         })
         .catch(error => console.error('Error:', error));
 }
+// 호출하여 데이터 로드 및 표시
+//loadAndDisplayStations();
 
 var displayMarKerOverlays = [];
 // 지도에 마커를 표시하는 함수입니다
@@ -210,8 +220,28 @@ function displayMarker(data) {
         yAnchor: 3,
         position: marker.getPosition()
     });
+//////////////////////////////////////////////////////////////////////////////////////////////////list에 추가
+    document.getElementById("bookMark").addEventListener("click",function(){
+        InfoShowOn();
+    });
+    function addList(data){
+        var infoList = document.getElementById("info_ul");
+        var li = document.createElement("li");
+        li.id = data.stationID+"li";
+        var str = " ";
+        str += '<div><a>' + data.stationName + '</a></div>';
+        li.innerHTML = str;
 
+        infoList.appendChild(li);
+    }
+    function removeList(stationID){
+        var removeChildList =document.getElementById(stationID);
+        console.log(removeChildList);
+        document.getElementById("info_ul").removeChild(removeChildList);
+    }
     //////////////////////////////////////////////////////////////////////인포 윈도우에 정보 동적 생성
+
+
     var container = document.createElement('div');
     container.id = data.stationID;
     container.style.cssText = 'background: white; border: 1px solid black ; position : relative ; top : 350px ;';
@@ -238,6 +268,25 @@ function displayMarker(data) {
     content.innerHTML =  str;
     content.id = data.stationID;
     container.append(content);
+
+
+    var bookMark = document.createElement('button');
+    bookMark.innerHTML = '☆';
+    bookMark.id = data.stationID;
+    container.appendChild(bookMark);
+    overlay.setContent(container);
+    bookMark.onclick = function (event) {
+        if ( bookMarkList.includes(event.target.id) ){
+            bookMark.innerHTML = '☆';
+            bookMarkList.pop(event.target.id);
+            removeList(data.stationID+"li");
+        }else {
+            bookMark.innerHTML = '★';
+            bookMarkList.push(event.target.id);
+            addList(data);
+        }
+    };
+
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
@@ -420,9 +469,23 @@ function infoDisplayMarker(data, index) {
     content.innerHTML =  str;
     content.id = data.stationID;
     container.append(content);
-    content.onclick = function(event){
-        InfoShowOn(event.target.id);
-    }
+
+    var bookMark = document.createElement('button');
+    bookMark.innerHTML = '☆';
+    bookMark.id = data.stationID;
+    container.appendChild(bookMark);
+    overlay.setContent(container);
+    bookMark.onclick = function (event) {
+        if ( bookMarkList.includes(event.target.id) ){
+            bookMark.innerHTML = '☆';
+            bookMarkList.pop(event.target.id);
+            removeList(data.stationID+"li");
+        }else {
+            bookMark.innerHTML = '★';
+            bookMarkList.push(event.target.id);
+            addList(data);
+        }
+    };
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
@@ -450,7 +513,7 @@ function infoDisplayMarker(data, index) {
     markers.push(marker);
     overlays.push(overlay);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 빈칸 우선
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 빈칸 우선
 
 function calLengthByDistance() {
     removeDuplicateStations();
@@ -736,36 +799,24 @@ document.getElementById("update_time").addEventListener("click", function (){
     refreshMarkers();
 })
 
-//즐겨찾기
-document.getElementById("bookmarkButton").addEventListener("click", function(event){
-    bookMarkOn(event.target.id);
-    bookMarkOff(event.target.id);
-},false)
-//해당 충전소를 즐겨찾기에 등록합니다.
-function bookMarkOn(stationID){
-    //별표 업데이트
-    //즐겨찾기 리스트에 StationID 등록
-}
-//해당 충전소를 즐겨찾기에서 삭제합니다.
-function bookMarkOff(stationID) {
-    //별표 업데이트
-    //즐겨찾기 리스트에서 StationID 삭제
-}
 ////////////////////////////////////////////////로그인 to 로그아웃
-document.addEventListener('DOMContentLoaded', function() {
-    if (localStorage.getItem('loggedIn') === 'true') {
-        replaceLoginWithLogout();
-    }
-});
+
+
+
+
 function handleLogout() {
     alert("You have been logged out.");
-    localStorage.removeItem('loggedIn'); // Remove the login state
     document.getElementById('loginForm').innerHTML = '<a href="/login" class="button">로그인</a>';
+
     // Additional logout logic here (e.g., clearing tokens, session data)
 }
 
 // Function to replace login link with logout button
 function replaceLoginWithLogout() {
+    localStorage.removeItem('loggedIn'); // Remove the login state
     document.getElementById('loginForm').innerHTML = '<button id="logoutButton" class="button">로그아웃</button>';
     document.getElementById('logoutButton').addEventListener('click', handleLogout);
 }
+
+
+

@@ -5,7 +5,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
     console.log("Sending login request with:", { username: username, password: password });
 
-    fetch('/login', {
+    fetch('/users/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

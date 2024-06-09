@@ -2,9 +2,9 @@
 // custom Func
 
 //// 즐겨찾기
-let bookMarkList = [];
+let bookmarkList = [];
 
-//// [TODO]bookMarkList 를 DB에서 받아온걸로 업데이트
+//// [TODO]bookmarkList 를 DB에서 받아온걸로 업데이트
 
 // 충전소 정보 업데이트
 function UpdateInfo(stationID){
@@ -244,27 +244,6 @@ function displayMarker(data) {
         yAnchor: 1.2,
         position: marker.getPosition()
     });
-//////////////////////////////////////////////////////////////////////////////////////////////////list에 추가
-    document.getElementById("bookMark").addEventListener("click",function(){
-        InfoShowOn();
-    });
-    function addList(data){
-        var infoList = document.getElementById("info_ul");
-        var li = document.createElement("li");
-        li.id = data.stationID+"li";
-        var str = " ";
-        str += '<div><a>' + data.stationName + '</a></div>';
-        li.innerHTML = str;
-
-        infoList.appendChild(li);
-    }
-    function removeList(stationID){
-        var removeChildList =document.getElementById(stationID);
-        console.log(removeChildList);
-        document.getElementById("info_ul").removeChild(removeChildList);
-    }
-    //////////////////////////////////////////////////////////////////////인포 윈도우에 정보 동적 생성
-
 
     var container = document.createElement('div');
     container.id = data.stationID;
@@ -295,22 +274,25 @@ function displayMarker(data) {
 
 
     var bookMark = document.createElement('button');
-    bookMark.innerHTML = '☆';
+    if ( !bookmarkList.includes(data.stationID) ) {
+        bookMark.innerHTML = '☆';
+    }else {
+        bookMark.innerHTML = '★';
+    }
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
     bookMark.onclick = function (event) {
-        if ( bookMarkList.includes(event.target.id) ){
+        if ( bookmarkList.includes(data.stationID) ){
             bookMark.innerHTML = '☆';
-            bookMarkList = bookMarkList.filter(id => id !== event.target.id);
+            bookmarkList.pop(data.stationID);
             removeList(data.stationID+"li");
         }else {
             bookMark.innerHTML = '★';
-            bookMarkList.push(event.target.id);
+            bookmarkList.push(data.stationID);
             addList(data);
         }
     };
-
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
@@ -498,18 +480,22 @@ function infoDisplayMarker(data, index) {
     container.append(content);
 
     var bookMark = document.createElement('button');
-    bookMark.innerHTML = '☆';
+    if ( !bookmarkList.includes(data.stationID) ) {
+        bookMark.innerHTML = '☆';
+    }else {
+        bookMark.innerHTML = '★';
+    }
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
     bookMark.onclick = function (event) {
-        if ( bookMarkList.includes(event.target.id) ){
+        if ( bookmarkList.includes(data.stationID) ){
             bookMark.innerHTML = '☆';
-            bookMarkList.pop(event.target.id);
+            bookmarkList.pop(data.stationID);
             removeList(data.stationID+"li");
         }else {
             bookMark.innerHTML = '★';
-            bookMarkList.push(event.target.id);
+            bookmarkList.push(data.stationID);
             addList(data);
         }
     };
@@ -840,10 +826,96 @@ function handleLogout() {
 
 // Function to replace login link with logout button
 function replaceLoginWithLogout() {
-    localStorage.removeItem('loggedIn'); // Remove the login state
+    // localStorage.removeItem('loggedIn'); // Remove the login state
     document.getElementById('loginForm').innerHTML = '<button id="logoutButton" class="button">로그아웃</button>';
     document.getElementById('logoutButton').addEventListener('click', handleLogout);
 }
 
+document.getElementById("bookMark").addEventListener('click', function(){
+    InfoShowOn();
+    getBookmarkList(localStorage.getItem('username'));
+});
 
+// TODO 북마크
+function getBookmarkList(username) {
+    fetch(`/bookmarks/getBookmarksByUser?username=${username}`)
+        .then(response => response.json())
+        .then(data => {
+            bookmarkList = data;
+            showBookMarkList(bookmarkList);
+            for (let i = 0; i < bookmarkList.length; i++) {
+                console.log(bookmarkList[i].statId);
+                console.log(bookmarkList[i].statNm);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+function addBookmark(username, stationId) {
+    fetch(`/bookmarks/addBookmark?username=${username}&stationId=${stationId}`, {
+        method: 'POST'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Bookmark added:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+function delBookmark(username, stationId) {
+    fetch(`/bookmarks/delBookmark?username=${username}&stationId=${stationId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Bookmark deleted:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
+function addList(data){
+    var infoList = document.getElementById("info_ul");
+    var li = document.createElement("li");
+    li.id = data.stationID+"li";
+    var str = " ";
+    str += '<div><a>' + data.stationName + '</a></div>';
+    li.innerHTML = str;
+
+    infoList.appendChild(li);
+}
+function removeList(stationID){
+    var removeChildList =document.getElementById(stationID);
+    console.log(removeChildList);
+    document.getElementById("info_ul").removeChild(removeChildList);
+}
+//////////////////////////////////////////////////////////////////////인포 윈도우에 정보 동적 생성
+
+function showBookMarkList(bookMarkList) {
+    var infoList = document.getElementById("info_ul");
+    infoList.innerHTML = ''; // 기존 목록을 초기화합니다.
+
+    if (bookMarkList.length === 0) {
+        // 즐겨찾기 목록이 비어있을 경우 메시지를 표시하거나 다른 작업을 수행합니다.
+        infoList.innerHTML = '<li>No bookmarks found</li>';
+    } else {
+        bookMarkList.forEach(bookmark => {
+            var li = document.createElement("li");
+            li.id = bookmark.statId + "li";
+            var str = '<div><a>' + bookmark.statNm + '</a></div>';
+            li.innerHTML = str;
+            infoList.appendChild(li);
+        });
+    }
+}

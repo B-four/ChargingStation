@@ -24,4 +24,12 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         return user;
     }
+    
+    public User registerUser(User newUser) {
+        User existingUser = userRepository.findByUsername(newUser.getUsername());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        return userRepository.save(newUser);
+    }
 }

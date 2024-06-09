@@ -33,12 +33,12 @@ function slowFast(data) {
     data.forEach(function(item) {
         if (item.chargerType == 1) {
             slow_all_num++;
-            if (item.chargerStatus != 2) {
+            if (item.chargerStatus == 3) {
                 slow_using_num++;
             }
         } else if (item.chargerType == 2) {
             fast_all_num++;
-            if (item.chargerStatus != 2) {
+            if (item.chargerStatus == 3) {
                 fast_using_num++;
             }
         }
@@ -179,9 +179,11 @@ function removeNearByInfo() {
     var nearByMarkers = [];
     var nearByOverlays = [];
     var nearByStations = [];
+    var newNearByStations = [];
 
 function fetchNearbyStations(lat, lon) {
     console.log("니어바이 실행")
+    newNearByStations = [];
     //removeNearByInfo();//이주형
     fetch(`/api/chargers/nearbyList?latitude=${lat}&longitude=${lon}`, {
         method: 'GET',
@@ -209,17 +211,19 @@ function fetchNearbyStations(lat, lon) {
                 };
             });
             //이주형
-            //stations배열의 stationID와 nearByStations의 stationID를 비교하여 중복되지않은 것만 stations배열에 다시 저장하는 기능
-            stations = stations.filter(station =>
+            //stations배열의 stationID와 nearByStations의 stationID를 비교하여 중복되지않은 것만 newNearByStations에 저장한후 nearByStations에 newNearByStations을 추가해줘
+                        // 중복되지 않은 station만 newNearByStations 배열에 저장
+                        const newNearByStations = stations.filter(station =>
                             !nearByStations.some(nearby => nearby.stationID === station.stationID)
                         );
 
-            // stations 배열을 사용하는 로직
-            for (let i = 0; i < stations.length; i++) {
-                nearByStations.push(stations[i]);
-                var data = stations[i];
-                displayMarker(data);
-            }
+                        // newNearByStations를 nearByStations에 추가
+                        nearByStations.push(...newNearByStations);
+
+                        // newNearByStations 배열을 사용하는 로직
+                        newNearByStations.forEach(data => {
+                            displayMarker(data);
+                        });
         })
         .catch(error => console.error('Error:', error));
 }
@@ -316,8 +320,8 @@ function displayMarker(data) {
     });
 
     //이주형
-    nearByMarkers.push(marker);
-    nearByOverlays.push(overlay);
+    //nearByMarkers.push(marker);
+    //nearByOverlays.push(overlay);
 
     displayMarKerOverlays.push(overlay);
 }
@@ -392,7 +396,7 @@ click1.addEventListener("click", function(){
         map.setCenter(locPosition);
     });
 }, false);
-
+//거리우선 기능
 click2.addEventListener("click", function(){
     setNullDisplatMarkerOverlays();
     setNullOverlays();
@@ -666,20 +670,20 @@ function removeDuplicateStations() {
         }
     });
 }
-
+//1번이 충전가능
 // 빈칸 우선 중복 제거
 function removeDuplicateStationsByAvailability() {
     const stationMap = new Map();
 
     stations.forEach(station => {
-        if (!stationMap.has(station.stationAddress)) {
-            stationMap.set(station.stationAddress, {
+        if (!stationMap.has(station.stationID)) {
+            stationMap.set(station.stationID, {
                 ...station,
-                availableChargers: station.chargerStatus === 1 ? 1 : 0
+                availableChargers: station.chargerStatus !=3 ? 1 : 0
             });
         } else {
-            const existingStation = stationMap.get(station.stationAddress);
-            existingStation.availableChargers += station.chargerStatus === 1 ? 1 : 0;
+            const existingStation = stationMap.get(station.stationID);
+            existingStation.availableChargers += station.chargerStatus !=3 ? 1 : 0;
         }
     });
 
@@ -692,14 +696,14 @@ function removeDuplicateStationsByFastCharger() {
 
     stations.forEach(station => {
         if (station.chargerType === 2) {
-            if (!stationMap.has(station.stationAddress)) {
-                stationMap.set(station.stationAddress, {
+            if (!stationMap.has(station.stationID)) {
+                stationMap.set(station.stationID, {
                     ...station,
-                    availableChargers: station.chargerStatus === 1 ? 1 : 0
+                    availableChargers: station.chargerStatus !=3 ? 1 : 0
                 });
             } else {
-                const existingStation = stationMap.get(station.stationAddress);
-                existingStation.availableChargers += station.chargerStatus === 1 ? 1 : 0;
+                const existingStation = stationMap.get(station.stationID);
+                existingStation.availableChargers += station.chargerStatus !=3 ? 1 : 0;
             }
         }
     });

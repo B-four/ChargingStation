@@ -23,12 +23,14 @@ public class api
     @Autowired
     private StationRepository chargerInfoItemRepository;
 
+    private final Gson gson = new Gson();
+
     @Scheduled(fixedRate = 300000) // 5분(300,000밀리초)마다 실행
     public void api2ReadPaged() throws IOException {
         int pageNo = 1;
-        int numOfRows = 9999;
+        int numOfRows = 9999; // 각 페이지에서 가져올 데이터 개수
         boolean hasMoreData = true;
-        Gson gson = new Gson();
+        int totalCount = 0; // 총 데이터 개수
 
         while (hasMoreData) {
             try {
@@ -67,40 +69,51 @@ public class api
                 // JSON 데이터를 Java 객체로 매핑
                 StationResponse response = gson.fromJson(jsonString, StationResponse.class);
                 List<Station> items = response.getItems().getItem();
+                totalCount = response.getTotalCount();
 
                 // 유효성 검사 및 필터링
                 items.removeIf(item -> item.getChgerId() == null || item.getStatId() == null);
 
-                // 데이터 업데이트
+                // 배치 저장
+                int updatedCount = 0;
                 for (Station item : items) {
                     Station existingItem = chargerInfoItemRepository.findByStatIdAndChgerId(item.getStatId(), item.getChgerId());
-
                     if (existingItem != null) {
-                        // 기존 데이터가 있는 경우, 업데이트할 컬럼만 갱신
-                        existingItem.setChgerType(item.getChgerType());
-                        existingItem.setStat(item.getStat());
-                        existingItem.setStatUpdDt(item.getStatUpdDt());
-                        existingItem.setOutput(item.getOutput());
-                        chargerInfoItemRepository.save(existingItem);
+                        // 기존 데이터가 있는 경우, 변경 사항이 있을 때만 갱신
+                        if (!existingItem.equals(item)) {
+                            existingItem.setChgerType(item.getChgerType());
+                            existingItem.setStat(item.getStat());
+                            existingItem.setStatUpdDt(item.getStatUpdDt());
+                            existingItem.setOutput(item.getOutput());
+                            chargerInfoItemRepository.save(existingItem);
+                            updatedCount++;
+                            //System.out.println("Updated item: " + existingItem.getStatId() + " / " + existingItem.getChgerId() + " / " + existingItem.getStatUpdDt());
+                        }
                     } else {
                         // 기존 데이터가 없는 경우 새로 추가
                         chargerInfoItemRepository.save(item);
+                        updatedCount++;
                     }
                 }
+                System.out.println("Page " + pageNo + " data fetching and updating completed. Updated " + updatedCount + " items.");
 
-                // 더 이상 가져올 데이터가 없으면 루프 종료
-                hasMoreData = items.size() == numOfRows;
+                // 다음 페이지로 이동
                 pageNo++;
+                int totalPages = (int) Math.ceil((double) totalCount / numOfRows);
+                hasMoreData = pageNo <= totalPages;
             } catch (IOException e) {
                 System.err.println("Error occurred: " + e.getMessage());
                 // 재시도 로직 또는 다음 페이지 시도
                 try {
-                    Thread.sleep(10000); // 10초 대기 후 재시도
+                    Thread.sleep(5000); // 5초 대기 후 재시도
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                 }
             }
         }
+
+        // 전체 작업 완료 메시지 출력
+        System.out.println("API data fetching and updating for all pages completed.");
     }
 
 

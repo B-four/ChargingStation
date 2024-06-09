@@ -55,7 +55,7 @@ public class Station
     private String busiCall; // 운영 기관 연락처
     
     @Column(name = "stat")
-    private int stat; // 충전기 상태
+    private int stat; // 충전기 상태 확인해야함
     
     @Column(name = "stat_upd_dt")
     private String statUpdDt; // 충전기 상태 갱신 시각

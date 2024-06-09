@@ -307,7 +307,6 @@ function displayMarker(data) {
         setNullOverlays();
         setNullDisplatMarkerOverlays();
         overlay.setMap(map);
-        InfoShowOn(event.target.id);
     });
 
     displayMarKerOverlays.push(overlay);

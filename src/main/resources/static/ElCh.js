@@ -33,12 +33,12 @@ function slowFast(data) {
     data.forEach(function(item) {
         if (item.chargerType == 1) {
             slow_all_num++;
-            if (item.chargerStatus != 2) {
+            if (item.chargerStatus == 3) {
                 slow_using_num++;
             }
         } else if (item.chargerType == 2) {
             fast_all_num++;
-            if (item.chargerStatus != 2) {
+            if (item.chargerStatus == 3) {
                 fast_using_num++;
             }
         }
@@ -338,8 +338,8 @@ function displayMarker(data) {
     });
 
     //이주형
-    nearByMarkers.push(marker);
-    nearByOverlays.push(overlay);
+    //nearByMarkers.push(marker);
+    //nearByOverlays.push(overlay);
 
     displayMarKerOverlays.push(overlay);
 }
@@ -414,7 +414,7 @@ click1.addEventListener("click", function(){
         map.setCenter(locPosition);
     });
 }, false);
-
+//거리우선 기능
 click2.addEventListener("click", function(){
     setNullDisplatMarkerOverlays();
     setNullOverlays();
@@ -684,7 +684,7 @@ function removeDuplicateStations() {
         }
     });
 }
-
+//1번이 충전가능
 // 빈칸 우선 중복 제거
 function removeDuplicateStationsByAvailability() {
     const stationMap = new Map();
@@ -693,11 +693,11 @@ function removeDuplicateStationsByAvailability() {
         if (!stationMap.has(station.stationAddress)) {
             stationMap.set(station.stationAddress, {
                 ...station,
-                availableChargers: station.chargerStatus === 1 ? 1 : 0
+                availableChargers: station.chargerStatus === 2 ? 1 : 0
             });
         } else {
             const existingStation = stationMap.get(station.stationAddress);
-            existingStation.availableChargers += station.chargerStatus === 1 ? 1 : 0;
+            existingStation.availableChargers += station.chargerStatus === 2 ? 1 : 0;
         }
     });
 
@@ -713,11 +713,11 @@ function removeDuplicateStationsByFastCharger() {
             if (!stationMap.has(station.stationAddress)) {
                 stationMap.set(station.stationAddress, {
                     ...station,
-                    availableChargers: station.chargerStatus === 1 ? 1 : 0
+                    availableChargers: station.chargerStatus === 2 ? 1 : 0
                 });
             } else {
                 const existingStation = stationMap.get(station.stationAddress);
-                existingStation.availableChargers += station.chargerStatus === 1 ? 1 : 0;
+                existingStation.availableChargers += station.chargerStatus === 2 ? 1 : 0;
             }
         }
     });

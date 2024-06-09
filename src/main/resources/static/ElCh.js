@@ -178,6 +178,18 @@ function removeNearByInfo() {
     var nearByMarkers = [];
     var nearByOverlays = [];
 
+//이주형
+function removeNearByInfo() {
+    console.log("제거 실행")
+    nearByMarkers.forEach(marker => marker.setMap(null));
+    nearByOverlays.forEach(overlay => overlay.setMap(null));
+    nearByMarkers = [];
+    nearByOverlays = [];
+}
+//이주형
+    var nearByMarkers = [];
+    var nearByOverlays = [];
+
 function fetchNearbyStations(lat, lon) {
     console.log("니어바이 실행")
     removeNearByInfo();//이주형

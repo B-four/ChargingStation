@@ -5,6 +5,7 @@ import com.example.chargingstation.stationcontrol.entity.StationResponse;
 import com.example.chargingstation.stationcontrol.repository.StationRepository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -20,8 +21,9 @@ import java.util.List;
 public class api
 {
     @Autowired
-    private StationRepository chargerInfoItemRepository;
-
+    private StationRepository stationRepository;
+    
+    @Scheduled(fixedRate = 100000)
     public void api2Read() throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/EvCharger/getChargerStatus"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=31CcKv%2BKhtHZBXu42U3lWoa2ZKMVJb7UqwkIf3sKt14hQ31xoAuvKsFBU4XCd%2FcfudH7%2B0oDm2RD09QFkq%2Feng%3D%3D"); /*Service Key*/
@@ -63,13 +65,15 @@ public class api
                 System.out.println("Null ID found for item: " + item);
             }
         }*/
-        for (Station item : items) {
-            Station existingItem = chargerInfoItemRepository.findByStatId(item.getStatId());
+        /*for (Station item : items) {
+            List<Station> existingItems = stationRepository.findByStatId(item.getStatId());
             
-            if (existingItem == null || !existingItem.getStatUpdDt().equals(item.getStatUpdDt())) {
-                chargerInfoItemRepository.save(item);
+            for (Station existingItem : existingItems) {
+                if (!existingItem.getStatUpdDt().equals(item.getStatUpdDt())) {
+                    stationRepository.save(existingItem);
+                }
             }
-        }
+        }*/
     }
 
 
@@ -126,7 +130,7 @@ public class api
                 for (int i = 0; i < items.size(); i += batchSize) {
                     int end = Math.min(items.size(), i + batchSize);
                     List<Station> batchList = items.subList(i, end);
-                    chargerInfoItemRepository.saveAll(batchList);
+                    stationRepository.saveAll(batchList);
                     System.out.println("Saved items from index " + i + " to " + end);
                 }
 

@@ -1,7 +1,6 @@
 package com.example.chargingstation.usercontrol.control;
 
 import com.example.chargingstation.stationcontrol.entity.Station;
-import com.example.chargingstation.usercontrol.entity.Bookmark;
 import com.example.chargingstation.usercontrol.service.BookmarkService;
 import com.example.chargingstation.usercontrol.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/bookmarks")
@@ -29,6 +27,7 @@ public class BookmarkControl {
     public ResponseEntity<?> addBookmark(@RequestParam String username, @RequestParam String stationId) {
         try {
             String userId = String.valueOf(userService.findByUsername(username).getUser_id());
+            System.out.println("userName: " + username+ "userId: " + userId + ", statId: " + stationId);
             bookmarkService.addBookmark(userId, stationId);
             return ResponseEntity.ok("Bookmark added successfully");
         } catch (Exception e) {

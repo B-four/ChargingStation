@@ -291,10 +291,12 @@ function displayMarker(data) {
             bookMark.innerHTML = '☆';
             bookmarkList.pop(data.stationID);
             removeList(data.stationID+"li");
+            delBookmark(localStorage.getItem('username'), data.stationID);
         }else {
             bookMark.innerHTML = '★';
             bookmarkList.push(data.stationID);
             addList(data);
+            addBookmark(localStorage.getItem('username'), data.stationID, data.stationName);
         }
     };
 
@@ -484,11 +486,12 @@ function infoDisplayMarker(data, index) {
     container.append(content);
 
     var bookMark = document.createElement('button');
-    if ( !bookmarkList.includes(data.stationID) ) {
+    /*if ( !bookmarkList.includes(data.stationID) ) {
         bookMark.innerHTML = '☆';
     }else {
         bookMark.innerHTML = '★';
-    }
+    }*/
+    bookMark.innerHTML = '☆';
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
@@ -497,10 +500,12 @@ function infoDisplayMarker(data, index) {
             bookMark.innerHTML = '☆';
             bookmarkList.pop(data.stationID);
             removeList(data.stationID+"li");
+            delBookmark(localStorage.getItem('username'), data.stationID);
         }else {
             bookMark.innerHTML = '★';
             bookmarkList.push(data.stationID);
             addList(data);
+            addBookmark(localStorage.getItem('username'), data.stationID);
         }
     };
 
@@ -854,7 +859,8 @@ function getBookmarkList(username) {
         })
         .catch(error => console.error('Error:', error));
 }
-function addBookmark(username, stationId) {
+function addBookmark(username, stationId, stationName) {
+    console.log('Adding bookmark:', username, stationId, stationName);
     fetch(`/bookmarks/addBookmark?username=${username}&stationId=${stationId}`, {
         method: 'POST'
     })

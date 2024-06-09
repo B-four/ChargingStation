@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,7 +19,6 @@ public class BookmarkService
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
     private final StationRepository stationRepository;
-    private UserService userService;
     
     @Autowired
     public BookmarkService(BookmarkRepository bookmarkRepository, UserRepository userRepository, StationRepository stationRepository) {
@@ -28,17 +28,18 @@ public class BookmarkService
     }
     
     public void addBookmark(String userId, String stationId) throws Exception {
-        List<Bookmark> existingBookmarks = getBookmarksByUser(userId);
-        for (Bookmark bookmark : existingBookmarks) {
-            if (bookmark.getStation().getStatId().equals(stationId)) {
-                throw new Exception("Bookmark already exists");
-            }
-        }
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Station station = stationRepository.findByStatId(stationId);
-        if (station == null) {
+        List<Station> stations = stationRepository.findByStatId(stationId);
+        if (stations.isEmpty()) {
             throw new IllegalArgumentException("Station not found");
         }
+        Station station = stations.get(0);
+        
+        Optional<Bookmark> existingBookmark = bookmarkRepository.findByUserAndStation(user, station);
+        if (existingBookmark.isPresent()) {
+            throw new Exception("Bookmark already exists");
+        }
+        
         Bookmark newBookmark = new Bookmark();
         newBookmark.setUser(user);
         newBookmark.setStation(station);

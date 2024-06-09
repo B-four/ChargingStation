@@ -18,7 +18,6 @@ public interface StationRepository extends JpaRepository<Station, StationKey> {
                    "ORDER BY distance " +
                    "LIMIT 1000", nativeQuery = true)
     List<Station> findNearbyStations(@Param("latitude") double latitude, @Param("longitude") double longitude);
-    Station findByStatId(String statId);
-
+    List<Station> findByStatId(String statId);
     Station findByStatIdAndChgerId(String statId, String chgerId);
 }

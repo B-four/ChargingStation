@@ -19,4 +19,9 @@ public class UserService {
         User user = userRepository.findByUsernameAndPassword(username, password);
         return user;
     }
+    
+    public User findByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return user;
+    }
 }

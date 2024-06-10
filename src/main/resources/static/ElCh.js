@@ -953,7 +953,7 @@ function showBookMarkList(bookMarkList) {
 
     if (bookMarkList.length === 0) {
         // 즐겨찾기 목록이 비어있을 경우 메시지를 표시하거나 다른 작업을 수행합니다.
-        infoList.innerHTML = '<li>No bookmarks found</li>';
+        infoList.innerHTML = '<li>즐겨찾기가 없습니다.</li>';
     } else {
         bookMarkList.forEach(bookmark => {
             var li = document.createElement("li");
@@ -975,5 +975,20 @@ function setlocPosition(data) {
         lon = data.lng; // 경도
 
     var locPosition = new kakao.maps.LatLng(lat, lon)
+
+    var imageSrc="../img/star.png";
+    //마커 이미지 크기 표시
+    var imageSize = new kakao.maps.Size(25, 25);
+    // 마커 이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize,{
+         offset: new kakao.maps.Point(11, 10) // 앵커 포인트 설정
+    });
+
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position:  locPosition,
+        image : markerImage // 마커 이미지
+    });
+    marker.setMap(map);
     map.setCenter(locPosition);
 }

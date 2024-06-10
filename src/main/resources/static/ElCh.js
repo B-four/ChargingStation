@@ -1,6 +1,12 @@
 //==================================================
 // custom Func
-
+/////////////onload
+window.onload = async function () {
+    //fetchStations();
+    if (localStorage.getItem('loggedIn') === 'true') {
+        replaceLoginWithLogout();
+    }
+}
 //// 즐겨찾기
 let bookmarkList = [];
 
@@ -118,22 +124,21 @@ function debounce(func, delay) {
     };
 }
 
-kakao.maps.event.addListener(map, 'idle', debounce(function() {
+kakao.maps.event.addListener(map, 'idle', debounce(async function () {
     // 지도의 현재 중심 좌표를 가져옵니다
     var center = map.getCenter();
     var message = '지도 중심 좌표는 위도 ' + center.getLat() + ' 경도 ' + center.getLng() + ' 입니다';
+    const username = localStorage.getItem('username');
+    let bookList = [];
+    if (username) {
+        bookList = await getBookmarkList(username);
+    }
+    bookmarkList = bookList;
     fetchNearbyStations(center.getLat(), center.getLng());
     document.getElementById('centerCoords').innerText = message;
 }, 1000));
 
 var stations = []; //정보 배열
-
-window.onload = function () {
-    //fetchStations();
-    if (localStorage.getItem('loggedIn') === 'true') {
-        replaceLoginWithLogout();
-    }
-}
 
 
 
@@ -276,39 +281,34 @@ function displayMarker(data) {
     content.id = data.stationID;
     container.append(content);
 
-    /////////////////////////////////////////수정해야함
     var bookMark = document.createElement('button');
-    if ( !bookmarkList.includes(data.stationID) ) {
-        bookMark.innerHTML = '☆';
-    }else {
+    if (bookmarkList.some(bookmark => bookmark.statId === data.stationID)) {
         bookMark.innerHTML = '★';
+    } else {
+        bookMark.innerHTML = '☆';
     }
-    bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:none';
-    if(localStorage.getItem("username") != null){
-        bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:inline-block';
-    }
+    bookMark.style.cssText = 'border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : yellow ; font-size : 1vw; display:inline-block width:50px; height : 30px';
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
 
-    //////////////////////////////////////수정해야함
     bookMark.onclick = function (event) {
-        if ( bookmarkList.includes(data.stationID) ){
+        if (bookmarkList.some(bookmark => bookmark.statId === data.stationID)) {
             bookMark.innerHTML = '☆';
-            bookmarkList.pop(data.stationID);
-            removeList(data.stationID+"li");
+            bookmarkList = bookmarkList.filter(bookmark => bookmark.statId !== data.stationID);
+            removeList(data.stationID + "li");
             delBookmark(localStorage.getItem('username'), data.stationID);
-        }else {
+        } else {
             bookMark.innerHTML = '★';
-            bookmarkList.push(data.stationID);
+            bookmarkList.push({ statId: data.stationID }); // 객체로 추가
             addList(data);
-            addBookmark(localStorage.getItem('username'), data.stationID, data.stationName);
+            addBookmark(localStorage.getItem('username'), data.stationID);
         }
     };
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
-    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px;';
+    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; font-size : 1vw ;display:inline-block width:60px; height : 30px';
     closeBtn.id = data.stationID;
     container.appendChild(closeBtn);
     overlay.setContent(container);
@@ -490,31 +490,27 @@ function infoDisplayMarker(data, index) {
     content.innerHTML =  str;
     content.id = data.stationID;
     container.append(content);
-
+    getBookmarkList(localStorage.getItem('username'));
     var bookMark = document.createElement('button');
-    if ( !bookmarkList.includes(data.stationID) ) {
-        bookMark.innerHTML = '☆';
-    }else {
+    if (bookmarkList.some(bookmark => bookmark.statId === data.stationID)) {
         bookMark.innerHTML = '★';
+    } else {
+        bookMark.innerHTML = '☆';
     }
-    ///////////////////////////////////////////////수정해야함
-    bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:none';
-    if(localStorage.getItem("username") !== null){
-        bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:inline-block';
-    }
+    bookMark.style.cssText = 'border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : yellow ; font-size : 1vw; display:inline-block width:50px; height : 30px';
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
-    ////////////////////////////////////수정해야함
+
     bookMark.onclick = function (event) {
-        if ( bookmarkList.includes(data.stationID) ){
+        if (bookmarkList.some(bookmark => bookmark.statId === data.stationID)) {
             bookMark.innerHTML = '☆';
-            bookmarkList.pop(data.stationID);
-            removeList(data.stationID+"li");
+            bookmarkList = bookmarkList.filter(bookmark => bookmark.statId !== data.stationID);
+            removeList(data.stationID + "li");
             delBookmark(localStorage.getItem('username'), data.stationID);
-        }else {
+        } else {
             bookMark.innerHTML = '★';
-            bookmarkList.push(data.stationID);
+            bookmarkList.push({ statId: data.stationID }); // 객체로 추가
             addList(data);
             addBookmark(localStorage.getItem('username'), data.stationID);
         }
@@ -522,7 +518,7 @@ function infoDisplayMarker(data, index) {
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
-    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px;';
+    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; font-size : 1vw ;display:inline-block width:60px; height : 30px';
     closeBtn.id = data.stationID;
     container.appendChild(closeBtn);
     overlay.setContent(container);
@@ -860,25 +856,39 @@ function replaceLoginWithLogout() {
     document.getElementById('bookMarkButton').style.display="block";
 }
 
-document.getElementById("bookMark").addEventListener('click', function(){
+document.getElementById("bookMark").addEventListener('click', async function () {
     InfoShowOn();
-    getBookmarkList(localStorage.getItem('username'));
+    let bookList = []
+    bookmarkList = await getBookmarkList(localStorage.getItem('username'));
+    console.log("dddddddddddd" + bookmarkList.length);
+    showBookMarkList(bookmarkList);
+    for (let i = 0; i < bookmarkList.length; i++) {
+        console.log(bookmarkList[i].statId);
+        console.log(bookmarkList[i].statNm);
+    }
 });
 
 // TODO 북마크
-function getBookmarkList(username) {
-    fetch(`/bookmarks/getBookmarksByUser?username=${username}`)
-        .then(response => response.json())
-        .then(data => {
-            bookmarkList = data;
-            showBookMarkList(bookmarkList);
-            for (let i = 0; i < bookmarkList.length; i++) {
-                console.log(bookmarkList[i].statId);
-                console.log(bookmarkList[i].statNm);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+// function getBookmarkList(username) {
+//     fetch(`/bookmarks/getBookmarksByUser?username=${username}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             bookmarkList = data;
+//             return bookmarkList;
+//         })
+//         .catch(error => console.error('Error:', error));
+// }
+async function getBookmarkList(username) {
+    try {
+        const response = await fetch(`/bookmarks/getBookmarksByUser?username=${username}`);
+        const data = await response.json();
+        return data; // bookmarkList를 반환
+    } catch (error) {
+        console.error('Error:', error);
+        return []; // 에러가 발생할 경우 빈 배열을 반환
+    }
 }
+
 function addBookmark(username, stationId, stationName) {
     console.log('Adding bookmark:', username, stationId, stationName);
     fetch(`/bookmarks/addBookmark?username=${username}&stationId=${stationId}`, {

@@ -23,6 +23,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
                 localStorage.setItem('loggedIn', 'true');
                 localStorage.setItem('username', username);
                 console.log(localStorage.getItem('loggedIn'));
+                console.log(localStorage.getItem('username'));
                 window.location.href = '/';
             } else {
                 errorMessage.textContent = '아이디나 비밀번호가 잘못되었습니다.';

@@ -276,16 +276,22 @@ function displayMarker(data) {
     content.id = data.stationID;
     container.append(content);
 
-
+    /////////////////////////////////////////수정해야함
     var bookMark = document.createElement('button');
     if ( !bookmarkList.includes(data.stationID) ) {
         bookMark.innerHTML = '☆';
     }else {
         bookMark.innerHTML = '★';
     }
+    bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:none';
+    if(localStorage.getItem("username") != null){
+        bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:inline-block';
+    }
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
+
+    //////////////////////////////////////수정해야함
     bookMark.onclick = function (event) {
         if ( bookmarkList.includes(data.stationID) ){
             bookMark.innerHTML = '☆';
@@ -302,7 +308,7 @@ function displayMarker(data) {
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
-    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white';
+    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px;';
     closeBtn.id = data.stationID;
     container.appendChild(closeBtn);
     overlay.setContent(container);
@@ -486,15 +492,20 @@ function infoDisplayMarker(data, index) {
     container.append(content);
 
     var bookMark = document.createElement('button');
-    /*if ( !bookmarkList.includes(data.stationID) ) {
+    if ( !bookmarkList.includes(data.stationID) ) {
         bookMark.innerHTML = '☆';
     }else {
         bookMark.innerHTML = '★';
-    }*/
-    bookMark.innerHTML = '☆';
+    }
+    ///////////////////////////////////////////////수정해야함
+    bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:none';
+    if(localStorage.getItem("username") !== null){
+        bookMark.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px; font-size : 1vw; display:inline-block';
+    }
     bookMark.id = data.stationID;
     container.appendChild(bookMark);
     overlay.setContent(container);
+    ////////////////////////////////////수정해야함
     bookMark.onclick = function (event) {
         if ( bookmarkList.includes(data.stationID) ){
             bookMark.innerHTML = '☆';
@@ -511,6 +522,7 @@ function infoDisplayMarker(data, index) {
 
     var closeBtn = document.createElement('button');
     closeBtn.innerHTML = '닫기';
+    closeBtn.style.cssText='border-radius : 5px; background-color : RGB(158,158,158) ; border: 1px solid RGB(143,143,143) ; color : white ; padding : 5px;';
     closeBtn.id = data.stationID;
     container.appendChild(closeBtn);
     overlay.setContent(container);
@@ -828,16 +840,24 @@ document.getElementById("update_time").addEventListener("click", function (){
 
 function handleLogout() {
     alert("You have been logged out.");
-    document.getElementById('loginForm').innerHTML = '<a href="/login" class="button">로그인</a>';
+    localStorage.removeItem('username');
+    document.getElementById('loginForm').style.display="block";
+    document.getElementById("signupForm").style.display="block";
+    document.getElementById("bookMark").style.display="none";
+    document.getElementById('logoutForm').style.display="none";
+    document.getElementById('bookMarkButton').style.display="none";
 
     // Additional logout logic here (e.g., clearing tokens, session data)
 }
 
 // Function to replace login link with logout button
 function replaceLoginWithLogout() {
-    // localStorage.removeItem('loggedIn'); // Remove the login state
-    document.getElementById('loginForm').innerHTML = '<button id="logoutButton" class="button">로그아웃</button>';
-    document.getElementById('logoutButton').addEventListener('click', handleLogout);
+    localStorage.removeItem('loggedIn');
+    document.getElementById('logoutForm').style.display="block";
+    document.getElementById("bookMark").style.display="block";
+    document.getElementById('loginForm').style.display="none";
+    document.getElementById("signupForm").style.display="none";
+    document.getElementById('bookMarkButton').style.display="block";
 }
 
 document.getElementById("bookMark").addEventListener('click', function(){
@@ -903,6 +923,11 @@ function addList(data){
     str += '<div><a>' + data.stationName + '</a></div>';
     li.innerHTML = str;
 
+    // 동적으로 생성된 li 요소에 클릭 이벤트 추가
+    li.addEventListener('click', function() {
+        setlocPosition(data);
+    });
+
     infoList.appendChild(li);
 }
 function removeList(stationID){
@@ -925,7 +950,20 @@ function showBookMarkList(bookMarkList) {
             li.id = bookmark.statId + "li";
             var str = '<div><a>' + bookmark.statNm + '</a></div>';
             li.innerHTML = str;
+
+            // 동적으로 생성된 li 요소에 클릭 이벤트 추가
+            li.addEventListener('click', function() {
+                setlocPosition(bookmark);
+            });
             infoList.appendChild(li);
         });
     }
+}
+
+function setlocPosition(data) {
+    var lat = data.lat, // 위도
+        lon = data.lng; // 경도
+
+    var locPosition = new kakao.maps.LatLng(lat, lon)
+    map.setCenter(locPosition);
 }

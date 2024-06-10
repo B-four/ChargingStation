@@ -10,8 +10,8 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
-public class Bookmark {
-    
+public class Bookmark
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

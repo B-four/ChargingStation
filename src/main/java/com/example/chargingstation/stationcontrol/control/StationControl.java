@@ -10,8 +10,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/chargers")
-public class StationControl {
-    
+public class StationControl
+{
     private final StationService stationService;
     private final StationRepository stationRepository;
     
@@ -33,7 +33,6 @@ public class StationControl {
     
     @GetMapping("/nearbyList")
     public List<Station> getNearbyStations(@RequestParam double latitude, @RequestParam double longitude) {
-        // 가까운 충전소를 찾는 쿼리를 데이터베이스에서 실행합니다.
         List<Station> nearbyStations = stationRepository.findNearbyStations(latitude, longitude);
         return nearbyStations;
     }

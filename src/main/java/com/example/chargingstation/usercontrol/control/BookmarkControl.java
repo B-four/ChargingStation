@@ -12,8 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookmarks")
-public class BookmarkControl {
-    
+public class BookmarkControl
+{
     private final BookmarkService bookmarkService;
     private final UserService userService;
     

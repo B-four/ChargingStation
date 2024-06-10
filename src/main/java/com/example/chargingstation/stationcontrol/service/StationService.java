@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StationService {
-    
+public class StationService
+{
     private final StationRepository stationRepository;
     
     @Autowired

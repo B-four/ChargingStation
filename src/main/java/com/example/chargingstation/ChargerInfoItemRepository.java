@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ChargerInfoItemRepository extends JpaRepository<Station, StationKey> {
+public interface ChargerInfoItemRepository extends JpaRepository<Station, StationKey>
+{
     @Query(value = "SELECT *, " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(lat)) * cos(radians(lng) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(lat)))) AS distance " +
             "FROM env_charging_station_info " +

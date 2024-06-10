@@ -7,10 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 @RestController
 @RequestMapping("/users")
-public class UserControl {
-    
+public class UserControl
+{
     private final UserService userService;
     
     @Autowired
@@ -32,10 +34,11 @@ public class UserControl {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User newUser) {
         try {
-            userService.registerUser(newUser);
-            return ResponseEntity.ok("Registration successful");
+            User registeredUser = userService.registerUser(newUser);
+            System.out.println("Registered user: " + registeredUser);
+            return ResponseEntity.ok(Collections.singletonMap("message", "Registration successful"));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", e.getMessage()));
         }
     }
 }

@@ -46,17 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await registerUser(data);
 
             console.log("데이터 전송: " + data.username + ", " + data.email + ", " + data.password);
+            alert("회원가입 되었습니다! 로그인 후 이용하여 주세요 :-)");
+            form.reset();
             window.location.href = '/';
-            if (result.status === 'ok') {
-                // 가입 성공 시
-                message.textContent = '회원가입이 성공적으로 완료되었습니다.';
-                message.style.color = 'green';
-                form.reset();
-            } else {
-                // 가입 실패 시
-                message.textContent = result.message || '회원가입 중 오류가 발생했습니다.';
-                message.style.color = 'red';
-            }
         } catch (error) {
             console.error('Error:', error);
             message.textContent = '아이디가 중복되었습니다. 다시 입력해주세요.';

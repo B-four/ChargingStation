@@ -19,7 +19,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         .then(text => {
             console.log("Response body:", text);
             if (text === "Login successful") {
-                alert("Login successful");
+                alert("로그인 되었습니다!");
                 localStorage.setItem('loggedIn', 'true');
                 localStorage.setItem('username', username);
                 console.log(localStorage.getItem('loggedIn'));

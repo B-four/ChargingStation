@@ -256,7 +256,7 @@ function displayMarker(data) {
 
     var container = document.createElement('div');
     container.id = data.stationID;
-    container.style.cssText = 'background: white; border: 1px solid black; width : 20vw ; height : fit-content; over-flow : hidden';
+    container.style.cssText = 'background: white; border: 1px solid black; width : 21vw ; height : fit-content; over-flow : hidden';
     resetCounters();
     slowFast(UpdateInfo(data.stationID));
     var content = document.createElement('div');
@@ -466,7 +466,7 @@ function infoDisplayMarker(data, index) {
     });
     var container = document.createElement('div');
     container.id = data.stationID;
-    container.style.cssText = 'background: white; border: 1px solid black width : 300px ; height : 200px;';
+    container.style.cssText = 'background: white; border: 1px solid black; width : 21vw ; height : fit-content; over-flow : hidden';
     resetCounters();
     slowFast(UpdateInfo(data.stationID));
     var content = document.createElement('div');

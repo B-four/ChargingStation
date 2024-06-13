@@ -71,15 +71,10 @@ function changeMarkerColor(stationID) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////오른쪽 팝업에 충전소별 사용현황 정보 전달
 // 충전소 정보 인터페이스 스윕
 function InfoShowOn() {
-
     document.getElementById("info").style.display = "block";
-    // document.getElementById("info").style.border = "0.5vw solid blueviolet";
-    // document.getElementById("map").style.width = "80vw";
 }
 function InfoShowOff(){
     document.getElementById("info").style.display = "none";
-    // document.getElementById("info").style.border = "";
-    // document.getElementById("map").style.width = "100vw";
 }
 // 충전소 정보 인터페이스 닫기 이벤트
 document.getElementById("info_close").addEventListener("click", function(){
@@ -837,16 +832,7 @@ document.getElementById("bookMark").addEventListener('click', async function () 
     }
 });
 
-// TODO 북마크
-// function getBookmarkList(username) {
-//     fetch(`/bookmarks/getBookmarksByUser?username=${username}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             bookmarkList = data;
-//             return bookmarkList;
-//         })
-//         .catch(error => console.error('Error:', error));
-// }
+// 북마크
 async function getBookmarkList(username) {
     try {
         const response = await fetch(`/bookmarks/getBookmarksByUser?username=${username}`);

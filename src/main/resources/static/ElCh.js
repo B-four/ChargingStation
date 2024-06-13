@@ -139,37 +139,6 @@ kakao.maps.event.addListener(map, 'idle', debounce(async function () {
 }, 1000));
 
 var stations = []; //정보 배열
-
-
-
-function fetchStations() {
-    fetch('/stationList')
-        .then(response => response.json())
-        .then(data => {
-            stations = data.map(item => ({
-                stationAddress: item.stationAddress,
-                chargerType: item.chargerType,
-                chargerID: item.chargerID,
-                chargerName: item.chargerName,
-                chargerStatus: item.chargerStatus,
-                chargerTerminal: item.chargerTerminal,
-                stationID: item.stationID,
-                stationName: item.stationName,
-                latlng: new kakao.maps.LatLng(item.stationLatitude, item.stationLongitude),
-                status_UpdateTime: item.status_UpdateTime
-            }));
-            // stations 배열을 사용하는 로직
-            //console.log(stations);
-
-            // stations 배열을 사용하는 로직
-            for(let i=0; i < stations.length; i++){
-                var data = stations[i];
-                displayMarker(data);
-            }
-
-        })
-        .catch(error => console.error('Error:', error));
-}
 //
 //이주형
 function removeNearByInfo() {
@@ -803,7 +772,7 @@ function findClosestStationsByFastCharger(currentPosition, uniqueStationsByFastC
 function refreshMarkers() {
     console.log("refreshMarkers function started"); // 함수 시작 로그
 
-    fetch('/updateData')
+    fetch('/api/chargers/updateData')
         .then(response => response.json())
         .then(data => {
             console.log("Fetched data: ", data); // 가져온 데이터 로그

@@ -25,7 +25,7 @@ public class api
 
     private final Gson gson = new Gson();
 
-    @Scheduled(fixedRate = 300000) // 5분(300,000밀리초)마다 실행
+    @Scheduled(fixedRate = 60000) // 1분(60,000밀리초)마다 실행
     public void api2ReadPaged() throws IOException {
         int pageNo = 1;
         int numOfRows = 9999; // 각 페이지에서 가져올 데이터 개수

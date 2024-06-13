@@ -21,7 +21,7 @@ public class StationControl
         this.stationRepository = stationRepository;
     }
     
-    @GetMapping
+    @GetMapping("/updateData")
     public List<Station> getAllStations() {
         return stationService.getAllStations();
     }
